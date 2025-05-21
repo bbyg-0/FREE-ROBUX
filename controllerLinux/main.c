@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <fcntl.h>
 #include <netinet/in.h>
 #include <stdio.h>
@@ -49,20 +50,27 @@ int main(int argc, char const* argv[]){
 		perror("listen");
 		exit(EXIT_FAILURE);
 	}
-	if ((new_socket
-		 = accept(server_fd, (struct sockaddr*)&address,
-				  &addrlen))
-		< 0) {
-		perror("accept");
-		exit(EXIT_FAILURE);
+	while(1){
+		if ((new_socket = accept(server_fd, (struct sockaddr*)&address, &addrlen)) < 0) {
+			if(errno == EAGAIN || errno == EWOULDBLOCK){
+				usleep(100000);
+				continue;
+			}else{
+				perror("accept");
+				exit(EXIT_FAILURE);
+			}
+		}else{
+			printf("CONNECTION IS RECEIVED\n");
+			break;
+		}
 	}
   
 	// subtract 1 for the null
 	// terminator at the end
 	
 	while(1){
-		valread = read(new_socket, buffer, 1024 - 1); 
-		printf("%s\n", buffer);
+		//valread = read(new_socket, buffer, 1024 - 1); 
+		//printf("%s\n", buffer);
 		clearBuffer(buffer, sizeof(buffer));
 		printf("COMMAND\t:");
 
