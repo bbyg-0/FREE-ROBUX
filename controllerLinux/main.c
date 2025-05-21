@@ -1,3 +1,4 @@
+#include <fcntl.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,7 +6,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include "common.h"
+#include "../commonFiles/common.h"
 
 #define PORT 8080
 int main(int argc, char const* argv[]){
@@ -32,6 +33,10 @@ int main(int argc, char const* argv[]){
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = INADDR_ANY;
 	address.sin_port = htons(PORT);
+	
+	int flags = fcntl(server_fd, F_GETFL, 0);         // Get current flags
+	fcntl(server_fd, F_SETFL, flags | O_NONBLOCK);   // Set non-blocking flag
+
 
 	// Forcefully attaching socket to the port 8080
 	if (bind(server_fd, (struct sockaddr*)&address,
@@ -58,10 +63,9 @@ int main(int argc, char const* argv[]){
 	while(1){
 		valread = read(new_socket, buffer, 1024 - 1); 
 		printf("%s\n", buffer);
-
 		clearBuffer(buffer, sizeof(buffer));
-		
-		printf("MESSAGE:");
+		printf("COMMAND\t:");
+
 		secureInputString(buffer, sizeof(buffer)-2);
 		send(new_socket, buffer, strlen(buffer), 0);
 		clearBuffer(buffer, sizeof(buffer));
