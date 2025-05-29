@@ -11,13 +11,15 @@
 
 #define PORT 8080
 int main(int argc, char const* argv[]){
-	int server_fd, new_socket;
+	int server_fd, client;	//socket server ama socket buat client yang diterima
+
 	ssize_t valread;
-	struct sockaddr_in address;
+
+	struct sockaddr_in address;	//alamat ip
 	int opt = 1;
-	socklen_t addrlen = sizeof(address);
-	char buffer[1024] = { 0 };
-	char* hello = "Hello from server";
+
+	socklen_t addrlen = sizeof(address);	//panjang alamat ip
+	char buffer[1024] = { 0 };		//buffer pesan
 
 	// Creating socket file descriptor
 	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -51,7 +53,7 @@ int main(int argc, char const* argv[]){
 		exit(EXIT_FAILURE);
 	}
 	while(1){
-		if ((new_socket = accept(server_fd, (struct sockaddr*)&address, &addrlen)) < 0) {
+		if ((client = accept(server_fd, (struct sockaddr*)&address, &addrlen)) < 0) {
 			if(errno == EAGAIN || errno == EWOULDBLOCK){
 				usleep(100000);
 				continue;
@@ -65,22 +67,19 @@ int main(int argc, char const* argv[]){
 		}
 	}
   
-	// subtract 1 for the null
-	// terminator at the end
-	
 	while(1){
-		//valread = read(new_socket, buffer, 1024 - 1); 
+		//valread = read(client, buffer, 1024 - 1); 
 		//printf("%s\n", buffer);
 		clearBuffer(buffer, sizeof(buffer));
 		printf("COMMAND\t:");
 
 		secureInputString(buffer, sizeof(buffer)-2);
-		send(new_socket, buffer, strlen(buffer), 0);
+		send(client, buffer, strlen(buffer), 0);
 		clearBuffer(buffer, sizeof(buffer));
 	}
 
 	// closing the connected socket
-	close(new_socket);
+	close(client);
   
 	// closing the listening socket
 	close(server_fd);
