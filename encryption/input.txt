@@ -1,0 +1,10 @@
+# User Login Info (example)
+
+username: alice
+password: rabbit123
+
+username: bob
+password: builder456
+
+username: charlie
+password: chocolate789

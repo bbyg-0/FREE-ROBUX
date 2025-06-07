@@ -4,6 +4,7 @@
 #include <openssl/evp.h>
 #include <openssl/rand.h>
 #include <argon2.h>
+#include "file_encryption.h"
 
 #define SALT_LEN 16
 #define KEY_LEN 32 // AES-256 requires 32-byte key
