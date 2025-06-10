@@ -28,3 +28,4 @@ char upperChar(char x);
 char* myStrdup(const char * input);
 
 void clearBuffer(char * buffer, int size);
+
