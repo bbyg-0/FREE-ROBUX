@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "command.h"
-#include "..\commonFiles\common.h"
+#include "../common/common.h"
 
 // OPERASI UNTUK ARRAY COMMAND
 
