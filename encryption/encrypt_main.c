@@ -1,4 +1,4 @@
-#include "file_encryption.h"
+#include "fileEncryption.h"
 #include <stdio.h>
 
 int main() {
