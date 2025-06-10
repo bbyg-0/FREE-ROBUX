@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../commonFiles/common.h"
+#include "../common/common.h"
 #include "keylog.h"
 #include "command.h"
 
