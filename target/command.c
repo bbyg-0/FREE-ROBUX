@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "command.h"
+#include "command.h" 
 #include "..\commonFiles\common.h"
 
 // OPERASI UNTUK ARRAY COMMAND

@@ -14,11 +14,12 @@
 
 #define PORT 8080
 
+
 int main() {
 	WSADATA wsaData;
 	SOCKET client_fd;
 	struct sockaddr_in serv_addr;
-	char buffer[1024] = { 0 };
+	char buffer[1024] = {0};
 
 	box command;
 	inisialisasi(command);
