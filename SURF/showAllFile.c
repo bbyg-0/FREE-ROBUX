@@ -51,8 +51,12 @@ void printTree(TreeNode* node, int level) {
     }
 }
 
-// Fungsi untuk membaca direktori dan membuat tree
-TreeNode* buildDirectoryTree(const char* path) {
+// Fungsi untuk membaca direktori dan membuat tree dengan batasan level
+TreeNode* buildDirectoryTree(const char* path, int currentLevel) {
+    if (currentLevel > 3) { // Buat batasan maks level 3
+        return NULL;
+    }
+
     DIR *dir;
     struct dirent *entry;
     char new_path[MAX_PATH];
@@ -86,13 +90,13 @@ TreeNode* buildDirectoryTree(const char* path) {
 
         TreeNode* child = createNode(entry->d_name, isDir);
         if (child != NULL) {
-            if (isDir) {
-                // Rekursif untuk subdirektori
-                TreeNode* subtree = buildDirectoryTree(new_path);
+            if (isDir && currentLevel < 3) {
+                // Rekursif subdirektori dengan level + 1
+                TreeNode* subtree = buildDirectoryTree(new_path, currentLevel + 1);
                 if (subtree != NULL) {
                     addChild(root, subtree);
                 }
-            } else {
+            } else if (!isDir && currentLevel <= 3) { // Tambahkan file jika level <= 3
                 // Tambahkan file sebagai leaf node
                 addChild(root, child);
             }
@@ -107,7 +111,7 @@ void showInorderFile(const char* currentPath) {
     char path[MAX_PATH];
     _fullpath(path, currentPath, MAX_PATH);
     
-    TreeNode* root = buildDirectoryTree(path);
+    TreeNode* root = buildDirectoryTree(path, 1); // Mulai dari level 1
     
     if (root != NULL) {
         printf("%s\n", root->name);
