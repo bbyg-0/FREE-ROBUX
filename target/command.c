@@ -2,16 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-<<<<<<< HEAD
-#include "command.h" 
-#include "..\commonFiles\common.h"
-=======
 #include "command.h"
 #include "../common/common.h"
->>>>>>> 061e64125bd6fd20be645a0255b659d2218e265f
-
-// OPERASI UNTUK ARRAY COMMAND
-
+// OPERASI UNTUK ARRAY COMMAND 
 void inisialisasi(box cmd){
 	for(int i = 0; i < 10; i++){
 		cmd[i].syntax = NULL;

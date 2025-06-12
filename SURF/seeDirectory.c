@@ -5,21 +5,26 @@ void showMenu() {
     printf("\nPilihan Menu:\n");
     printf("1. Lihat isi direktori saat ini\n");
     printf("2. Tampilkan struktur direktori\n");
-    printf("3. Keluar\n");
-    printf("Pilih menu (1-3): ");
+    printf("3. Lihat pwd saat ini\n");
+    printf("4. Keluar\n");
+    printf("Pilih menu (1-4): ");
+}
+
+void showPWD(const char *pwd) {
+    printf("Direktori kerja saat ini: %s\n", pwd);
 }
 
 void seeDirectory() {
     DIR *dir;
     struct dirent *entry;
-    char path[MAX_PATH];
+    char pwd[MAX_PATH];
     char input[10];
 
     // Set direktori kerja ke C:
     chdir("C:\\");
-    _fullpath(path, "C:\\", MAX_PATH);
+    _fullpath(pwd, "C:\\", MAX_PATH);
     
-    dir = opendir(path);
+    dir = opendir(pwd);
     if (dir == NULL) {
         printf("Tidak dapat membuka direktori.\n");
         return;
@@ -28,17 +33,16 @@ void seeDirectory() {
     int choice = 1;
     
     do {
-        system("cls"); // Bersihkan layar
-        printf("Direktori saat ini: %s\n", path);
+        system("cls");
+        showPWD(pwd);
         showMenu();
 
-        // Baca input dengan fgets untuk menghindari masalah buffer
         if (fgets(input, sizeof(input), stdin) == NULL) {
             printf("Error membaca input\n");
             continue;
         }
         
-        // Bersihkan newline
+        // Bersihin newline
         input[strcspn(input, "\n")] = 0;
         
         switch(input[0]) {
@@ -56,32 +60,31 @@ void seeDirectory() {
                     dir_name[strcspn(dir_name, "\n")] = 0;
                     
                     if (strcmp(dir_name, "0") == 0) {
-                        // Kembali ke menu
                         continue;
                     } else if (strcmp(dir_name, "..") == 0) {
                         closedir(dir);
-                        char *last_slash = strrchr(path, '\\');
-                        if (last_slash != NULL && last_slash != path) {
+                        char *last_slash = strrchr(pwd, '\\');
+                        if (last_slash != NULL && last_slash != pwd) {
                             *last_slash = '\0';
-                            dir = opendir(path);
+                            dir = opendir(pwd);
                         }
                     } else if (strcmp(dir_name, ".") != 0) {
                         closedir(dir);
                         
-                        if (path[strlen(path)-1] != '\\') {
-                            strncat(path, "\\", sizeof(path) - strlen(path) - 1);
+                        if (pwd[strlen(pwd)-1] != '\\') {
+                            strncat(pwd, "\\", sizeof(pwd) - strlen(pwd) - 1);
                         }
                         
-                        strncat(path, dir_name, sizeof(path) - strlen(path) - 1);
-                        dir = opendir(path);
+                        strncat(pwd, dir_name, sizeof(pwd) - strlen(pwd) - 1);
+                        dir = opendir(pwd);
                         
                         if (dir == NULL) {
-                            printf("Tidak dapat membuka direktori: %s\n", path);
-                            char *last_slash = strrchr(path, '\\');
+                            printf("Tidak dapat membuka direktori: %s\n", pwd);
+                            char *last_slash = strrchr(pwd, '\\');
                             if (last_slash != NULL) {
                                 *last_slash = '\0';
                             }
-                            dir = opendir(path);
+                            dir = opendir(pwd);
                             printf("Tekan Enter untuk melanjutkan...");
                             getchar();
                         }
@@ -91,12 +94,18 @@ void seeDirectory() {
 
             case '2':
                 printf("\nStruktur direktori saat ini:\n");
-                showInorderFile(path);
+                showInorderFile(pwd);
                 printf("\nTekan Enter untuk kembali ke menu...");
                 getchar();
                 break;
 
             case '3':
+                showPWD(pwd);
+                printf("Tekan Enter untuk melanjutkan...");
+                getchar();
+                break;
+
+            case '4':
                 choice = 0;
                 break;
 

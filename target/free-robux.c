@@ -7,7 +7,7 @@
 #include <string.h>
 
 #include "../common/common.h"
-#include "keylog.h"
+#include "keylogger.h"
 #include "command.h"
 
 #pragma comment(lib, "Ws2_32.lib")
