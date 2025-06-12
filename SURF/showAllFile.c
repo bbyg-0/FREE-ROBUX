@@ -103,9 +103,9 @@ TreeNode* buildDirectoryTree(const char* path) {
     return root;
 }
 
-void showInorderFile() {
+void showInorderFile(const char* currentPath) {
     char path[MAX_PATH];
-    _fullpath(path, "C:\\Polban", MAX_PATH);
+    _fullpath(path, currentPath, MAX_PATH);
     
     TreeNode* root = buildDirectoryTree(path);
     

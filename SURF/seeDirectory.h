@@ -15,5 +15,8 @@
 #define MAX_PATH 260
 
 void seeDirectory();
+void showCurrentPath();
+void showMenu();
+void processCommand(char command);
 
 #endif

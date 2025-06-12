@@ -3,7 +3,6 @@
 #include "showAllFile.h"
 
 int main() {
-    showInorderFile();
     seeDirectory();
     return 0;
 }

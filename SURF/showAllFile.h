@@ -28,6 +28,6 @@ TreeNode* createNode(const char* name, int isDirectory);
 void addChild(TreeNode* parent, TreeNode* child);
 void freeTree(TreeNode* root);
 void printTree(TreeNode* node, int level);
-void showInorderFile();
+void showInorderFile(const char* currentPath);  // Mengubah deklarasi untuk menerima parameter
 
 #endif
