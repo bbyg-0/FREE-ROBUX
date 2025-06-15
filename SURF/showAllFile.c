@@ -13,14 +13,12 @@ TreeNode* createNode(const char* name, int isDirectory) {
     return newNode;
 }
 
-// Fungsi untuk menambahkan child ke parent node
 void addChild(TreeNode* parent, TreeNode* child) {
     if (parent->childCount < MAX_CHILDREN) {
         parent->children[parent->childCount++] = child;
     }
 }
 
-// Fungsi untuk membebaskan memori tree
 void freeTree(TreeNode* root) {
     if (root == NULL) return;
     
@@ -30,7 +28,6 @@ void freeTree(TreeNode* root) {
     free(root);
 }
 
-// Fungsi untuk mencetak tree
 void printTree(TreeNode* node, int level) {
     if (node == NULL) return;
 
@@ -43,13 +40,13 @@ void printTree(TreeNode* node, int level) {
     }
     printf("%s\n", node->name);
 
-    // Rekursif untuk setiap child
+    // Rekursif untuk tiap child
     for (int i = 0; i < node->childCount; i++) {
         printTree(node->children[i], level + 1);
     }
 }
 
-// Fungsi untuk membaca direktori dan membuat tree dengan batasan level
+// Fungsi untuk membaca direktori dan membuat tree dengan batasan level maks 3
 TreeNode* buildDirectoryTree(const char* path, int currentLevel) {
     if (currentLevel > 3) { // Buat batasan maks level 3
         return NULL;

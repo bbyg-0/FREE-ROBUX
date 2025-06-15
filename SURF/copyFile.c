@@ -112,7 +112,7 @@ int copyDirectory(const char *sourceDir, const char *destDir) {
         return -3;
     }
 
-    // Inisialisasi queue
+    // Buat queue
     createQueue(&fileQueue);
 
     // Kumpulkan semua file dalam queue
@@ -130,7 +130,7 @@ int copyDirectory(const char *sourceDir, const char *destDir) {
             // Tambahkan file ke dalam queue
             enqueue(&fileQueue, sourcePath, destPath);
         } else if (isDirectory(sourcePath)) {
-            // Untuk direktori, buat direktori baru dan proses secara rekursif
+            // Buat direktori baru dan lakukan rekursif
             status = copyDirectory(sourcePath, destPath);
             if (status < 0) {
                 closedir(dir);
@@ -168,7 +168,7 @@ int copyFile(const char *sourcePath, const char *destPath) {
         return -1;
     }
 
-    // Buka file sumber dalam mode binary read
+    // Buka file sumber
     sourceFile = fopen(sourcePath, "rb");
     if (sourceFile == NULL) {
         printf("Error saat membuka file sumber: %s\n", strerror(errno));
@@ -191,15 +191,14 @@ int copyFile(const char *sourcePath, const char *destPath) {
         strncpy(finalDestPath, destPath, MAX_PATH - 1);
     }
 
-    // Buka/buat file tujuan dalam mode binary write
+    // Buka file tujuan
     destFile = fopen(finalDestPath, "wb");
     if (destFile == NULL) {
         fclose(sourceFile);
         printf("Error saat membuka file tujuan: %s\n", strerror(errno));
         return -3;
     }
-
-    // Salin file dalam chunks untuk menghemat memori
+    // Salin konten dari file sumber ke file tujuan
     while ((bytesRead = fread(buffer, 1, BUFFER_SIZE, sourceFile)) > 0) {
         if (fwrite(buffer, 1, bytesRead, destFile) != bytesRead) {
             fclose(sourceFile);

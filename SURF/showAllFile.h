@@ -25,7 +25,7 @@ typedef struct TreeNode {
     int childCount;
 } TreeNode;
 
-// Function declarations
+// Fungsi untuk Tree
 TreeNode* createNode(const char* name, int isDirectory);
 void addChild(TreeNode* parent, TreeNode* child);
 void freeTree(TreeNode* root);
