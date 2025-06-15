@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include "seeDirectory.h"
+#include "showAllFile.h"
 
 int main() {
-    seeDirectory();
+    surfMode();
     return 0;
 }

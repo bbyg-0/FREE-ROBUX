@@ -3,10 +3,8 @@
 #include <string.h>
 
 #include "command.h"
-#include "..\commonFiles\common.h"
-
-// OPERASI UNTUK ARRAY COMMAND
-
+#include "../common/common.h"
+// OPERASI UNTUK ARRAY COMMAND 
 void inisialisasi(box cmd){
 	for(int i = 0; i < 10; i++){
 		cmd[i].syntax = NULL;

