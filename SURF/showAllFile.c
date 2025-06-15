@@ -94,7 +94,7 @@ TreeNode* buildDirectoryTree(const char* path, int currentLevel) {
                 if (subtree != NULL) {
                     addChild(root, subtree);
                 }
-            } else if (!isDir && currentLevel <= 3) { // Tambahkan file jika level <= 3
+            } else if (!isDir && currentLevel <= 3) {
                 // Tambahkan file sebagai leaf node
                 addChild(root, child);
             }

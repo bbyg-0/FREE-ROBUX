@@ -11,7 +11,7 @@
 #define MAX_PATH 260
 
 // Implementasi fungsi-fungsi Queue
-void initQueue(FileQueue* q) {
+void createQueue(FileQueue* q) {
     q->front = NULL;
     q->rear = NULL;
 }
@@ -71,7 +71,7 @@ int isDirectory(const char *path) {
 const char* getFileName(const char *path) {
     const char *fileName = strrchr(path, '\\');
     if (fileName != NULL) {
-        return fileName + 1;  // Lompat backslash
+        return fileName + 1; // Lompat backslash
     }
     return path;
 }
@@ -94,25 +94,28 @@ int copyDirectory(const char *sourceDir, const char *destDir) {
 
     // Periksa apakah source adalah direktori
     if (!isDirectory(sourceDir)) {
-        return -1;  // Source bukan direktori
+        printf("Source bukan direktori: %s\n", sourceDir);
+        return -1;
     }
 
     // Buka direktori sumber
     dir = opendir(sourceDir);
     if (dir == NULL) {
-        return -2;  // Gagal membuka direktori sumber
+        printf("Error saat membuka direktori sumber: %s\n", strerror(errno));
+        return -2;
     }
 
     // Buat direktori tujuan jika belum ada
     if (_mkdir(destDir) != 0 && errno != EEXIST) {
         closedir(dir);
-        return -3;  // Gagal membuat direktori tujuan
+        printf("Error saat membuat direktori tujuan: %s\n", strerror(errno));
+        return -3;
     }
 
     // Inisialisasi queue
-    initQueue(&fileQueue);
+    createQueue(&fileQueue);
 
-    // Pertama, kumpulkan semua file dalam queue
+    // Kumpulkan semua file dalam queue
     while ((entry = readdir(dir)) != NULL) {
         // Skip . dan ..
         if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
@@ -132,7 +135,8 @@ int copyDirectory(const char *sourceDir, const char *destDir) {
             if (status < 0) {
                 closedir(dir);
                 clearQueue(&fileQueue);
-                return -4;  // Error dalam subdirektori
+                printf("Error saat menyalin subdirektori: %s\n", strerror(errno));
+                return -4;
             }
         }
     }
@@ -144,11 +148,12 @@ int copyDirectory(const char *sourceDir, const char *destDir) {
         status = copyFile(sourcePath, destPath);
         if (status != 0) {
             clearQueue(&fileQueue);
-            return -5;  // Error saat menyalin file
+            printf("Error saat menyalin file: %s\n", strerror(errno));
+            return -5;
         }
     }
 
-    return 0;  // Sukses
+    return 0;
 }
 
 int copyFile(const char *sourcePath, const char *destPath) {
@@ -159,13 +164,15 @@ int copyFile(const char *sourcePath, const char *destPath) {
 
     // Periksa apakah sumber adalah file
     if (!isFile(sourcePath)) {
-        return -1;  // Sumber bukan file
+        printf("Sumber bukan file: %s\n", sourcePath);
+        return -1;
     }
 
     // Buka file sumber dalam mode binary read
     sourceFile = fopen(sourcePath, "rb");
     if (sourceFile == NULL) {
-        return -2;  // Gagal membuka file sumber
+        printf("Error saat membuka file sumber: %s\n", strerror(errno));
+        return -2;
     }
 
     // Jika destPath adalah direktori, tambahkan nama file dari sourcePath
@@ -188,7 +195,8 @@ int copyFile(const char *sourcePath, const char *destPath) {
     destFile = fopen(finalDestPath, "wb");
     if (destFile == NULL) {
         fclose(sourceFile);
-        return -3;  // Gagal membuka/membuat file tujuan
+        printf("Error saat membuka file tujuan: %s\n", strerror(errno));
+        return -3;
     }
 
     // Salin file dalam chunks untuk menghemat memori
@@ -196,7 +204,8 @@ int copyFile(const char *sourcePath, const char *destPath) {
         if (fwrite(buffer, 1, bytesRead, destFile) != bytesRead) {
             fclose(sourceFile);
             fclose(destFile);
-            return -4;  // Error saat menulis
+            printf("Error saat menulis ke file tujuan: %s\n", strerror(errno));
+            return -4;
         }
     }
 

@@ -25,7 +25,7 @@ typedef struct {
 } FileQueue;
 
 // Fungsi-fungsi Queue
-void initQueue(FileQueue* q);
+void createQueue(FileQueue* q);
 int isEmpty(FileQueue* q);
 void enqueue(FileQueue* q, const char* sourcePath, const char* destPath);
 int dequeue(FileQueue* q, char* sourcePath, char* destPath);
