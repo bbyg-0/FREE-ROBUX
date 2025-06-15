@@ -1,6 +1,4 @@
 #include "showAllFile.h"
-#include <windows.h>
-#include <stdlib.h>
 
 // Fungsi untuk membuat node baru
 TreeNode* createNode(const char* name, int isDirectory) {

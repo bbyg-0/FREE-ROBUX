@@ -6,6 +6,9 @@
 #include <dirent.h>
 #include <stdlib.h>
 
+#include "copyFile.h"
+#include "showAllFile.h"
+
 #ifdef _WIN32
     #include <direct.h>
 #else
@@ -14,9 +17,8 @@
 
 #define MAX_PATH 260
 
-void seeDirectory();
-void showCurrentPath();
 void showMenu();
-void processCommand(char command);
+void surfMode();
+void showPWD(const char *pwd);
 
 #endif

@@ -1,20 +1,20 @@
 #include "seeDirectory.h"
-#include "showAllFile.h"
 
 void showMenu() {
     printf("\nPilihan Menu:\n");
     printf("1. Lihat isi direktori saat ini\n");
     printf("2. Tampilkan struktur direktori\n");
-    printf("3. Lihat pwd saat ini\n");
-    printf("4. Keluar\n");
-    printf("Pilih menu (1-4): ");
+    printf("3. Copy file\n");
+    printf("4. Lihat pwd saat ini\n");
+    printf("5. Keluar\n");
+    printf("Pilih menu (1-5): ");
 }
 
 void showPWD(const char *pwd) {
     printf("Direktori kerja saat ini: %s\n", pwd);
 }
 
-void seeDirectory() {
+void surfMode() {
     DIR *dir;
     struct dirent *entry;
     char pwd[MAX_PATH];
@@ -99,13 +99,36 @@ void seeDirectory() {
                 getchar();
                 break;
 
-            case '3':
+            case '3': {
+                char source[MAX_PATH], dest[MAX_PATH];
+                printf("Masukkan path file sumber: ");
+                if (fgets(source, sizeof(source), stdin) != NULL) {
+                    source[strcspn(source, "\n")] = 0;
+                }
+
+                printf("Masukkan path file tujuan: ");
+                if (fgets(dest, sizeof(dest), stdin) != NULL) {
+                    dest[strcspn(dest, "\n")] = 0;
+                }
+
+                int result = copyFile(source, dest);
+                if (result == 0) {
+                    printf("File berhasil disalin.\n");
+                } else {
+                    printf("Gagal menyalin file. Kode error: %d\n", result);
+                }
+                printf("Tekan Enter untuk melanjutkan...");
+                getchar();
+                break;
+            }
+
+            case '4':
                 showPWD(pwd);
                 printf("Tekan Enter untuk melanjutkan...");
                 getchar();
                 break;
 
-            case '4':
+            case '5':
                 choice = 0;
                 break;
 
