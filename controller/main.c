@@ -27,7 +27,7 @@ int main(int argc, char const* argv[]){
 
 	servSocket = CreateThread(NULL, 0, serverSocket, (LPVOID)&param, 0, &servSocketId);
 	sendMSG = CreateThread(NULL, 0, sendMessage, (LPVOID)&param, 0, &sendMSGId);
-	getMSG = CreateThread(NULL, 0, getMessage, (LPVOID)&param, 0, &getMSGId);
+	getMSG = CreateThread(NULL, 0, getMessageController, (LPVOID)&param, 0, &getMSGId);
 
 
 	WaitForSingleObject(servSocket, INFINITE);
@@ -44,7 +44,7 @@ int main(int argc, char const* argv[]){
 	pthread_create(&servSocket, NULL, serverSocket, (void *)&param);
 
 	pthread_create(&send, NULL, sendMessage, (void *)&(param.clientSocket));
-	pthread_create(&get, NULL, getMessage, (void *)&param);
+	pthread_create(&get, NULL, getMessageController, (void *)&param);
 
 	pthread_join(servSocket, NULL);
 	pthread_join(send, NULL);
