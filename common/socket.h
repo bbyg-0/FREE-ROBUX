@@ -50,6 +50,8 @@ DWORD WINAPI clientSocket(LPVOID param);
 DWORD WINAPI sendMessage(LPVOID param);
 
 DWORD WINAPI getMessage(LPVOID param);
+
+DWORD WINAPI execMessage(LPVOID paramT);
 #else
 void * serverSocket(void * vParamT);
 

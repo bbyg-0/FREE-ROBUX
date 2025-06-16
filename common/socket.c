@@ -1,5 +1,6 @@
 #include "socket.h"
 #include "common.h"
+#include "../target/command.h"
 
 #ifdef _WIN32
 #else
@@ -334,18 +335,16 @@ void * getMessage (void * vParam){
 #endif
 
 // FUNGSI UTAMA COMMAND
-# ifdef _WIN32
-#include "../target/command.h"
-
-
+#ifdef _WIN32
 DWORD WINAPI execMessage(LPVOID paramT){
-	if (paramT == NULL) return;
+	if (paramT == NULL) return -1;
 
 	paramThread * param = (paramThread *)paramT;
 	char server_reply[1024] = {0};
+	int recv_size = 0;
 
 	box cmd;
-	inisialiasi(cmd);
+	inisialisasi(cmd);
 
 	addCommand("SHUTDOWN", (void *)SHUTDOWN, cmd);
 	addCommand("REBOOT", (void *)REBOOT, cmd);
@@ -367,5 +366,8 @@ DWORD WINAPI execMessage(LPVOID paramT){
 		}
 		Sleep(1000);
 	}
+
+	return 0;
 }
+#else
 #endif

