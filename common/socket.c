@@ -326,11 +326,11 @@ void * getMessageController (void * vParam){
 				fp = fopen("log.txt", "w"); continue;
 			} else if(strcmp(buffer, "ENDGETFILE") == 0) {
 				GETFILE = 0; memset(buffer, '\0', sizeof(buffer));
-				fp = NULL; continue;
+				fclose(fp); fp = NULL; continue;
 			}
 
 			if(GETFILE == 0) printf("%s\n", buffer);
-			else if(GETFILE == 1) fputs(buffer, fp);
+			else if(GETFILE == 1) {printf("%s\n", buffer); fputs(buffer, fp);}
 
 			memset(buffer, '\0', sizeof(buffer));
 		}else if(pass == 0){
