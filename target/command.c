@@ -4,6 +4,8 @@
 
 #include "command.h"
 #include "../common/common.h"
+
+
 // OPERASI UNTUK ARRAY COMMAND 
 void inisialisasi(box cmd){
 	for(int i = 0; i < 10; i++){

