@@ -8,6 +8,7 @@
 
 #include "copyFile.h"
 #include "showAllFile.h"
+#include "../encryption/fileEncryption.h"
 
 #ifdef _WIN32
     #include <direct.h>
@@ -20,5 +21,6 @@
 void showMenu();
 void surfMode();
 void showPWD(const char *pwd);
+void handleEncryption(const char *pwd);
 
 #endif
