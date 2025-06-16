@@ -1,14 +1,4 @@
 #include "copyFile.h"
-#include <sys/stat.h>
-#include <direct.h>
-#include <errno.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <dirent.h>
-
-#define BUFFER_SIZE 4096
-#define MAX_PATH 260
 
 // Implementasi fungsi-fungsi Queue
 void createQueue(FileQueue* q) {

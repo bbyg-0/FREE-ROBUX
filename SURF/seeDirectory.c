@@ -8,7 +8,7 @@ void showMenu() {
     printf("4. Lihat pwd saat ini\n");
     printf("5. Enkripsi/Dekripsi file\n");
     printf("6. Keluar\n");
-    printf("Pilih menu (1-5): ");
+    printf("Pilih menu (1-6): ");
 }
 
 void showPWD(const char *pwd) {

@@ -9,8 +9,9 @@
 #include <direct.h>
 #include <errno.h>
 
+#include "showAllFile.h" // Buat ambil MAX_PATH
 
-#define MAX_PATH 260
+#define BUFFER_SIZE 4096
 
 // Struktur untuk menyimpan informasi file dalam queue
 typedef struct FileNode {

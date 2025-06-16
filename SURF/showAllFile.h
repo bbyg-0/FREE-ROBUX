@@ -12,8 +12,11 @@
 #else
     #include <unistd.h>
 #endif
+#ifdef MAX_PATH
+    #undef MAX_PATH
+#endif
+#define MAX_PATH 512
 
-#define MAX_PATH 260
 #define MAX_NAME 256
 #define MAX_CHILDREN 100
 

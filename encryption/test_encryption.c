@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "file_encryption.h"
+#include "fileEncryption.h"
 
 int main() {
     char input_dir[1024];

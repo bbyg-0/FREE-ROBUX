@@ -1,11 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <openssl/evp.h>
-#include <openssl/rand.h>
-#include <argon2.h>
-#include <dirent.h>
-#include <sys/stat.h>
 #include "fileEncryption.h"
 
 #define SALT_LEN 16

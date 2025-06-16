@@ -16,8 +16,6 @@
     #include <unistd.h>
 #endif
 
-#define MAX_PATH 260
-
 void showMenu();
 void surfMode();
 void showPWD(const char *pwd);
