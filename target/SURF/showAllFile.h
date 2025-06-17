@@ -32,12 +32,11 @@ typedef struct TreeNode {
 TreeNode* createNode(const char* name, int isDirectory);
 void addChild(TreeNode* parent, TreeNode* child);
 void freeTree(TreeNode* root);
-void printTree(TreeNode* node, int level);
+void printTree(TreeNode* node, int level, void * paramS);
 TreeNode* buildDirectoryTree(const char* path, int currentLevel);
-void showInorderFile(const char* currentPath);
-void backToMenu();
-void seeCurrentDirectory(DIR *dir, char *pwd);
+void showInorderFile(void * param);
+
+void seeCurrentDirectory(void * paramS);
 void inputSourceDest(char *source, char *dest);
-void showPWD(const char *pwd);
 
 #endif

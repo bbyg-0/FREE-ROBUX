@@ -1,4 +1,7 @@
 #include "showAllFile.h"
+#include "seeDirectory.h"
+
+#include <string.h>
 
 // Fungsi untuk membuat node baru
 TreeNode *createNode(const char *name, int isDirectory)
@@ -35,26 +38,34 @@ void freeTree(TreeNode *root)
     free(root);
 }
 
-void printTree(TreeNode *node, int level)
+void printTree(TreeNode *node, int level, void * paramS)
 {
     if (node == NULL)
         return;
 
-    for (int i = 0; i < level; i++)
-    {
-        printf("   ");
+    paramSurf * param = (paramSurf *)paramS;
+    char buffer[128] = {0};
+
+    for (int i = 0; i < level; i++){
+        strcpy(buffer, "   ");
+        send(((param)->paramT)->clientSocket, buffer, strlen(buffer), 0);
+        memset(buffer, 0, strlen(buffer));
     }
 
     if (level > 0)
     {
-        printf("|_");
+        strcpy(buffer, "|_");
+        send(((param)->paramT)->clientSocket, buffer, strlen(buffer), 0);
+        memset(buffer, 0, strlen(buffer));
     }
-    printf("%s\n", node->name);
+    sprintf(buffer, "%s\n", node->name);
+    send(((param)->paramT)->clientSocket, buffer, strlen(buffer), 0);
+    memset(buffer, 0, strlen(buffer));
 
     // Rekursif untuk tiap child
     for (int i = 0; i < node->childCount; i++)
     {
-        printTree(node->children[i], level + 1);
+        printTree(node->children[i], level + 1, param);
     }
 }
 
@@ -128,84 +139,114 @@ TreeNode *buildDirectoryTree(const char *path, int currentLevel)
     return root;
 }
 
-void showInorderFile(const char *currentPath)
-{
-    printf("\nStruktur direktori saat ini:\n");
+void showInorderFile(void * paramS){
+    paramSurf * param = (paramSurf *)paramS;
+
+    char buffer[512] = {0};
+
+    strcpy(buffer, "\nStruktur direktori saat ini:\n");
+    send(((param)->paramT)->clientSocket, buffer, strlen(buffer), 0);
+    memset(buffer, 0, strlen(buffer));
+
     char path[MAX_PATH];
-    _fullpath(path, currentPath, MAX_PATH);
+    _fullpath(path, (param)->pwd, MAX_PATH);
 
     TreeNode *root = buildDirectoryTree(path, 1); // Mulai dari level 1
 
     if (root != NULL)
     {
-        printf("%s\n", root->name);
+        sprintf(buffer, "%s\n", root->name);
+        send(((param)->paramT)->clientSocket, buffer, strlen(buffer), 0);
+        memset(buffer, 0, strlen(buffer));
+
         for (int i = 0; i < root->childCount; i++)
         {
-            printTree(root->children[i], 1);
+            printTree(root->children[i], 1, param);
         }
         freeTree(root);
     }
 }
 
-void seeCurrentDirectory(DIR *dir, char *pwd) {
-	struct dirent *entry;
+void seeCurrentDirectory(void * paramS) {
+	paramSurf * param = (paramSurf *) paramS;
+    struct dirent *entry;
 
-	if (dir == NULL) {
-		printf("Tidak dapat membuka direktori.\n");
+    char buffer[2048] = {0};
+
+	if ((param)->dir == NULL) {
+        strcpy(buffer, "Tidak dapat membuka direktori.\n");
+        send(((param)->paramT)->clientSocket, buffer, strlen(buffer), 0);
+        memset(buffer, 0, strlen(buffer));
+        strcpy((param)->input, "END");
 		return;
 	}
 
-	printf("Direktori saat ini: %s\n", pwd);
-	printf("\nIsi direktori saat ini:\n");
-	rewinddir(dir);
+    sprintf(buffer,"Direktori saat ini: %s\n", (param)->pwd);
+    send(((param)->paramT)->clientSocket, buffer, strlen(buffer), 0);
+    memset(buffer, 0, strlen(buffer));
+    Sleep(101);
 
-	while ((entry = readdir(dir)) != NULL) {
-		printf("%s\n", entry->d_name);
+	strcpy(buffer, "\nIsi direktori saat ini:\n");
+    send(((param)->paramT)->clientSocket, buffer, strlen(buffer), 0);
+    memset(buffer, 0, strlen(buffer));
+    Sleep(101);
+
+	rewinddir((param)->dir);
+
+	while ((entry = readdir((param)->dir)) != NULL) {
+		sprintf(buffer, "%s\n", entry->d_name);
+        send(((param)->paramT)->clientSocket, buffer, strlen(buffer), 0);
+        memset(buffer, 0, strlen(buffer));
+        Sleep(101);
 	}
-	printf("\nMasukkan nama direktori yang ingin dibuka (0 untuk menu): ");
+	strcpy(buffer, "\nMasukkan nama direktori yang ingin dibuka (0 untuk menu): ");
+    send(((param)->paramT)->clientSocket, buffer, strlen(buffer), 0);
+    memset(buffer, 0, strlen(buffer));
+    Sleep(101);
 
-	char dir_name[MAX_PATH];
-	if (fgets(dir_name, sizeof(dir_name), stdin) != NULL) {
-		dir_name[strcspn(dir_name, "\n")] = 0;
+    strcpy((param)->input, "NULL");
+    while(strcmp((param)->input, "NULL")==0) Sleep(500);
+	if (strcmp((param)->input, "NULL") != 0) {
+        strcpy((param)->dir_name, (param)->input);
+        strcpy((param)->input, "1");
 
-		if (strcmp(dir_name, "0") == 0) {
+		(param)->dir_name[strcspn((param)->dir_name, "\n")] = 0;
+
+		if (strcmp((param)->dir_name, "0") == 0) {
+            strcpy((param)->input, "END");
 			return;
 		}
-		else if (strcmp(dir_name, "..") == 0) {
-			closedir(dir);
-			char *last_slash = strrchr(pwd, '\\');
-			if (last_slash != NULL && last_slash != pwd) {
+		else if (strcmp((param)->dir_name, "..") == 0) {
+			closedir((param)->dir);
+			char *last_slash = strrchr((param)->pwd, '\\');
+			if (last_slash != NULL && last_slash != (param)->pwd) {
 				*last_slash = '\0';
-				dir = opendir(pwd);
+				(param)->dir = opendir((param)->pwd);
 			}
 		}
-		else if (strcmp(dir_name, ".") != 0) {
-			closedir(dir);
+		else if (strcmp((param)->dir_name, ".") != 0) {
+			closedir((param)->dir);
 
-			if (pwd[strlen(pwd) - 1] != '\\') {
-				strncat(pwd, "\\", sizeof(pwd) - strlen(pwd) - 1);
+			if ((param)->pwd[strlen((param)->pwd) - 1] != '\\') {
+				strncat((param)->pwd, "\\", sizeof((param)->pwd) - strlen((param)->pwd) - 1);
 			}
 
-			strncat(pwd, dir_name, sizeof(pwd) - strlen(pwd) - 1);
-			dir = opendir(pwd);
+			strncat((param)->pwd, (param)->dir_name, sizeof((param)->pwd) - strlen((param)->pwd) - 1);
+			(param)->dir = opendir((param)->pwd);
 
-			if (dir == NULL) {
-				printf("Tidak dapat membuka direktori: %s\n", pwd);
-				char *last_slash = strrchr(pwd, '\\');
+			if ((param)->dir == NULL) {
+                sprintf(buffer, "Tidak dapat membuka direktori: %s\n", (param)->pwd);
+                send(((param)->paramT)->clientSocket, buffer, strlen(buffer), 0);
+                memset(buffer, 0, strlen(buffer));
+                Sleep(101);
+				char *last_slash = strrchr((param)->pwd, '\\');
 				if (last_slash != NULL) {
 					*last_slash = '\0';
 				}
-				dir = opendir(pwd);
-				backToMenu();
+				(param)->dir = opendir((param)->pwd);
 			}
 		}
 	}
-}
-
-void backToMenu()
-{
-    printf("Tekan Enter untuk kembali ke menu...");
-    getchar();
 }
 
 void inputSourceDest(char *source, char *dest)

@@ -1,13 +1,10 @@
 #include "copyFile.h"
+#include "../../common/common.h"
 
 // Implementasi fungsi-fungsi Queue
 void createQueue(FileQueue* q) {
     q->front = NULL;
     q->rear = NULL;
-}
-
-int isEmpty(FileQueue* q) {
-    return (q->front == NULL);
 }
 
 void enqueue(FileQueue* q, const char* sourcePath, const char* destPath) {

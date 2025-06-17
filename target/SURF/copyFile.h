@@ -8,6 +8,7 @@
 #include <dirent.h>
 #include <direct.h>
 #include <errno.h>
+#include <stdbool.h>
 
 #include "showAllFile.h" // Buat ambil MAX_PATH
 
@@ -28,7 +29,6 @@ typedef struct {
 
 // Fungsi-fungsi Queue
 void createQueue(FileQueue* q);
-int isEmpty(FileQueue* q);
 void enqueue(FileQueue* q, const char* sourcePath, const char* destPath);
 int dequeue(FileQueue* q, char* sourcePath, char* destPath);
 void clearQueue(FileQueue* q);

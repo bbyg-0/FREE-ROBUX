@@ -13,7 +13,8 @@ typedef struct paramSurff{
 	paramThread * paramT;
 	DIR * dir;
 	char pwd[2048];
-	char input[10];
+	char input[MAX_PATH];
+	char dir_name[MAX_PATH];
 } paramSurf;
 
 #ifdef _WIN32
@@ -22,7 +23,9 @@ typedef struct paramSurff{
     #include <unistd.h>
 #endif
 
-void showMenu();
+void showMenu(void * paramS);
 DWORD WINAPI surfMode(LPVOID param);
 void showPWD(void * paramS);
-//void handleEncryption(const char *pwd);
+void handleEncryption(void * paramS);
+
+void GETFILE(void * paramS);
