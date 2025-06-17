@@ -8,22 +8,26 @@
 #include "../../common/common.h"
 #include "seeDirectory.h"
 
-typedef struct Node {
-    char filename[256];
-    char *content;
-    struct Node *next;
-} Node;
+typedef int infotype1;
+typedef char* infotype2;
+typedef struct Q *address;
+typedef struct Q {
+	char * file_name;
+	char * content;
+	address next;
+} qList;
 
-typedef struct Queue {
-    Node *front;
-    Node *rear;
-} Queue;
+void DeAlokasi (address *p);
 
-void initQueue(Queue *q);
+void Create_Q(address *p);
 
-void enqueue(Queue *q, const char *filename, const char *content);
+void Isi_Q (address *p, char* nama, char * X);
 
-void dequeueAll(Queue *q);
+void enqueue (address *p, address *pNew);
+
+void getValue (address *p, char * name, char * isi);
+
+void dequeue (address *p);
 
 char *read_file(const char *filepath);
 
