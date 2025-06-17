@@ -8,15 +8,6 @@
 #include "../../common/common.h"
 #include "seeDirectory.h"
 
-typedef int infotype1;
-typedef char* infotype2;
-typedef struct Q *address;
-typedef struct Q {
-	char * file_name;
-	char * content;
-	address next;
-} qList;
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -6,8 +6,9 @@ void initQueue(Queue *q) {
 
 void enqueue(Queue *q, const char *filename, const char *content) {
     Node *newNode = (Node *)malloc(sizeof(Node));
+    if(newNode == NULL) printf("GAGAL ALOKASI Q");
     strncpy(newNode->filename, filename, sizeof(newNode->filename));
-    newNode->content = myStrdup(content);  // copy string
+    newNode->content = strdup(content);  // copy string
     newNode->next = NULL;
 
     if (!q->rear) {
@@ -82,52 +83,39 @@ void exec(paramSurf * param){
 		char *content = NULL;
 		content = read_file(fullpath);
 		if (content != NULL) {
-			printf("BERHASIL: %s %s\n", fullpath, content);
 			enqueue(&q, entry->d_name, content);
 			free(content);
-			Sleep(1000);
-		}else{
-			printf("%s\n", fullpath);
-			Sleep(1000);
 		}
 
 	}
 
 	// Tampilkan isi file
-	Node *current = q.front;
+	Node *current = q.rear;
 
-	memset(buffer, 0, strlen(buffer));
-	strcpy(buffer, "MAKEFOLDER");
-	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
-	Sleep(101);
-
-	memset(buffer, 0, strlen(buffer));
-	strcpy(buffer, (param)->input);
-	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
-	Sleep(101);
-
-	while(current){
+	while(current != NULL){
+		printf("MASUK");
 		memset(buffer, 0, strlen(buffer));
-		strcpy(buffer, "GETFILE2");
+		strcpy(buffer, "GETFILE");
 		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
 		memset(buffer, 0, strlen(buffer));
-
 		Sleep(101);
-		printf("\nGET: %s\n", current->filename);
+
 		send((param)->paramT->clientSocket, current->filename, strlen(current->filename), 0);
+		printf("%s ", current->filename);
 		Sleep(101);
 
 		send((param)->paramT->clientSocket, current->content, strlen(current->content), 0);
+		printf("%s\n", current->content);
 		Sleep(101);
 		
 		strcpy(buffer, "ENDGETFILE");
 		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
 		memset(buffer, 0, strlen(buffer));
+		Sleep(101);
 
 		current = current->next;
-		Sleep(101);
 	}
-
+	printf("BERES");
 	// Bersihkan memori
 	dequeueAll(&q);
 }
