@@ -1,59 +1,31 @@
 #include "cpy.h"
 
-void DeAlokasi (address *p){
-	if(p == NULL || (*p) == NULL) return;
-
-	free((*p)->file_name);	
-	free((*p)->content);	
-	free(*p);
-	(*p)->file_name = NULL;
-	(*p)->content = NULL;
-	(*p) = NULL;
+void initQueue(Queue *q) {
+    q->front = q->rear = NULL;
 }
 
-void Create_Q(address *p){
-	*p = (address)malloc(sizeof(qList));
-	if(isEmpty(*p)){
-		printf("Memori gagal dialokasi");return;
-	}
+void enqueue(Queue *q, const char *filename, const char *content) {
+    Node *newNode = (Node *)malloc(sizeof(Node));
+    strncpy(newNode->filename, filename, sizeof(newNode->filename));
+    newNode->content = myStrdup(content);  // copy string
+    newNode->next = NULL;
+
+    if (!q->rear) {
+        q->front = q->rear = newNode;
+    } else {
+        q->rear->next = newNode;
+        q->rear = newNode;
+    }
 }
 
-void Isi_Q (address *p, char * judul, char * isi){
-	if(isEmpty(*p)) return;
-
-	(*p)->file_name = strdup(judul);
-	(*p)->content = strdup(isi);
-}
-
-void enqueue (address *p, address *pNew){
-	if(isEmpty(*p)){
-		(*p) = *pNew;
-		return;
-	}	
-	address temp = (*p);
-	while(!isEmpty((*p)->next)){
-		(*p) = (*p)->next;
-	}
-	(*p)->next = (*pNew);
-	
-	(*p) = temp;
-}
-
-void getValue (address *p, char * name, char * isi){
-	if(isEmpty(*p)) return;
-	
-	(name) = strdup((*p)->file_name);
-	(isi) = strdup((*p)->content);
-}
-
-void dequeue (address *p){
-	if(isEmpty(*p)) return;
-	
-	address temp = (*p)->next;
-	DeAlokasi(p);
-	(*p) = temp;
-
-	if(isEmpty(*p)) printf("List telah kosong");
+void dequeueAll(Queue *q) {
+    while (q->front) {
+        Node *tmp = q->front;
+        q->front = q->front->next;
+        free(tmp->content);
+        free(tmp);
+    }
+    q->rear = NULL;
 }
 
 char *read_file(const char *filepath) {
@@ -73,10 +45,13 @@ char *read_file(const char *filepath) {
 }
 
 void exec(paramSurf * param){
-	address q;
-	address node;
+	Queue q;
+	initQueue(&q);
 
 	char buffer[256] = {0};
+
+	strcpy(buffer, (param)->dir_name);
+
 
 	strcpy(buffer, "\nPILIH FOLDER YANG AKAN DIAMBIL\n");
 	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
@@ -85,24 +60,33 @@ void exec(paramSurf * param){
 	strcpy((param)->input, "NULL");
 	while(strcmp((param)->input, "NULL") == 0) Sleep(50);
 
+	strcat(buffer, "/");
+	strcat(buffer, (param)->input);
+	DIR * dir = opendir();
+
 	struct dirent *entry;
 	while ((entry = readdir((param)->dir)) != NULL) {
+		// Lewati "." dan ".."
 		if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
 			continue;
 
+		// Buat path lengkap ke file
 		char fullpath[512];
 		snprintf(fullpath, sizeof(fullpath), "%s\\%s", (param)->input, entry->d_name);
 
-		char *content = read_file(fullpath);
+		char *content = NULL;
+		content = read_file(fullpath);
 		if (content != NULL) {
-			Create_Q(&node);
-			printf("%s %s", entry->d_name, content);
-			Sleep(5000);
-			Isi_Q(&node, entry->d_name, content);
+			enqueue(&q, entry->d_name, content);
 			free(content);
-			enqueue(&q, &node);
+		}else{
+			printf("%s\n", fullpath);
+			Sleep(1000);
 		}
 	}
+
+	// Tampilkan isi file
+	Node *current = q.front;
 
 	memset(buffer, 0, strlen(buffer));
 	strcpy(buffer, "MAKEFOLDER");
@@ -114,31 +98,28 @@ void exec(paramSurf * param){
 	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
 	Sleep(101);
 
-	char * NAMA; char * ISI;
-
-	while(q != NULL){
-		printf("YADAYADA\n");
+	while(current){
 		memset(buffer, 0, strlen(buffer));
 		strcpy(buffer, "GETFILE2");
 		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
 		memset(buffer, 0, strlen(buffer));
 
-		getValue(&q, NAMA, ISI);
-		printf("%s %s\n", NAMA, ISI);
-/*
 		Sleep(101);
-		printf("\nGET: %s\n", NAMA);
-		send((param)->paramT->clientSocket, NAMA, strlen(NAMA), 0);
+		printf("\nGET: %s\n", current->filename);
+		send((param)->paramT->clientSocket, current->filename, strlen(current->filename), 0);
 		Sleep(101);
 
-		send((param)->paramT->clientSocket, ISI, strlen(ISI), 0);
+		send((param)->paramT->clientSocket, current->content, strlen(current->content), 0);
 		Sleep(101);
 		
 		strcpy(buffer, "ENDGETFILE");
 		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
 		memset(buffer, 0, strlen(buffer));
-*/
-		dequeue(&q);
+
+		current = current->next;
 		Sleep(101);
 	}
+
+	// Bersihkan memori
+	dequeueAll(&q);
 }
