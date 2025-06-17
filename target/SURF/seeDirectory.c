@@ -281,6 +281,8 @@ void GETFILE(void * paramS){
 		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
 		memset(buffer, 0, strlen(buffer));
 
+		Sleep(101);
+		printf("\nGET: %s\n", (param)->input);
 		send((param)->paramT->clientSocket, (param)->input, strlen((param)->input), 0);
 
 		Sleep(101);
