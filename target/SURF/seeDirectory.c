@@ -3,106 +3,177 @@
 void showMenu(void * paramT) {
 	if(paramT == NULL) return;
 
-	paramThread * param = (paramThread *)paramT;
+	paramSurf * paramS = (paramSurf * ) paramT;
+	paramThread * param = (paramS)->paramT;
 
 	char buffer[128] = {0};
 
 	strcpy(buffer, "\nPilihan Menu:\n");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
-	Sleep(101);
+	Sleep(11);
 
-	strcpy(buffer, "1. Lihat isi direktori saat ini\n");
+	strcpy(buffer, "1. Tampilkan menu\n");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
-	Sleep(101);
+	Sleep(11);
 
-	strcpy(buffer, "2. Tampilkan struktur direktori\n");
+	strcpy(buffer, "2. Lihat isi direktori saat ini\n");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
-	Sleep(101);
+	Sleep(11);
 
-	strcpy(buffer, "3. Copy file\n");
+	strcpy(buffer, "3. Tampilkan struktur direktori\n");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
-	Sleep(101);
+	Sleep(11);
 
-	strcpy(buffer, "4. Copy direktori\n");
+	strcpy(buffer, "4. Lihat pwd saat ini\n");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
-	Sleep(101);
+	Sleep(11);
 
-	strcpy(buffer, "5. Lihat pwd saat ini\n");
+	strcpy(buffer, "5. Enkripsi/Dekripsi file\n");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
-	Sleep(101);
+	Sleep(11);
 
-	strcpy(buffer, "6. Enkripsi/Dekripsi file\n");
+	strcpy(buffer, "6. GET FILE\n");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
-	Sleep(101);
+	Sleep(11);
+
+	strcpy(buffer, "7. INJECT FILE\n");
+	send((param)->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(11);
+
+	strcpy(buffer, "8. DELETE FILE\n");
+	send((param)->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(11);
 
 	strcpy(buffer, "Input \"END\" untuk keluar dari SURF MODE\n");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
-	Sleep(101);
+	Sleep(11);
 }
 
 void showPWD(void * paramS) {
-	if(param == NULL) return;
+	if(paramS == NULL) return;
 
 	paramSurf * param = (paramSurf *)paramS;
 
 	char buffer[128] = {0};
 
-	Sleep(101);
-	strcpy(buffer, "Direktori kerja saat ini: %s\n");
+	Sleep(11);
+	sprintf(buffer, "Direktori kerja saat ini: %s\n", (param)->pwd);
 	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
-	Sleep(101);
+	Sleep(11);
 }
 
-void handleEncryption(const char *pwd) {
+void handleEncryption(void * paramS) {
+	paramSurf * param = (paramSurf *)paramS;
+
     char password[256];
+    char buffer[256] = {0};
+
     char encrypted_dir[MAX_PATH];
     char decrypted_dir[MAX_PATH];
+    
     char input[10];
-    printf("\nPilih operasi:\n");
-    printf("1. Enkripsi direktori\n");
-    printf("2. Dekripsi direktori\n");
-    printf("Pilih (1-2): ");
-    if (fgets(input, sizeof(input), stdin) == NULL) {
-        printf("Error membaca input\n");
-        return;
-    }
-    input[strcspn(input, "\n")] = 0;
-    printf("Masukkan kata sandi: ");
-    if (fgets(password, sizeof(password), stdin) == NULL) {
-        printf("Gagal membaca kata sandi\n");
-        return;
-    }
+    strcpy(buffer, "\nPilih operasi:\n");
+	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(11);
+
+    strcpy(buffer, "1. Enkripsi direktori\n");
+	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(11);
+
+    strcpy(buffer, "2. Dekripsi direktori\n");
+	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(11);
+
+    strcpy(buffer, "Pilih (1-2): \n");
+	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(11);
+
+	strcpy((param)->input, "NULL");
+
+	while(strcmp((param)->input, "NULL")==0) Sleep(500);
+
+    (param)->input[strcspn((param)->input, "\n")] = 0;
+    
+if ((param)->input[0] == '1' || (param)->input[0] == '2'){
+
+	char choice = (param)->input[0];
+
+    strcpy(buffer, "Masukkan kata sandi: ");
+	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(11);
+
+	strcpy((param)->input, "NULL");
+
+	while(strcmp((param)->input, "NULL")==0) Sleep(500);
+
+	strcpy(password, (param)->input);
+
     password[strcspn(password, "\n")] = 0;
-    if (input[0] == '1') {
-        snprintf(encrypted_dir, sizeof(encrypted_dir), "%s_encrypted", pwd);
-        printf("\nMengenkripsi direktori: %s\n", pwd);
-        if (encrypt_folder(pwd, encrypted_dir, password) == 0) {
-            printf("Direktori berhasil dienkripsi ke: %s\n", encrypted_dir);
+    if (choice == '1') {
+        snprintf(encrypted_dir, sizeof(encrypted_dir), "%s_enc", (param)->pwd);
+        sprintf(buffer, "\nMengenkripsi direktori: %s\n", (param)->pwd);
+		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+		memset(buffer, 0, strlen(buffer));
+		Sleep(11);
+        
+        if (encrypt_folder((param)->pwd, encrypted_dir, password) == 0) {
+            sprintf(buffer, "Direktori berhasil dienkripsi ke: %s\n", encrypted_dir);
+			send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+			memset(buffer, 0, strlen(buffer));
+			Sleep(11);
         } else {
-            printf("Enkripsi direktori gagal\n");
+            strcpy(buffer, "Enkripsi direktori gagal");
+			send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+			memset(buffer, 0, strlen(buffer));
+			Sleep(11);
         }
-    } else if (input[0] == '2') {
-        snprintf(decrypted_dir, sizeof(decrypted_dir), "%s_decrypted", pwd);
-        printf("\nMendekripsi direktori: %s\n", pwd);
-        if (decrypt_folder(pwd, decrypted_dir, password) == 0) {
-            printf("Direktori berhasil didekripsi ke: %s\n", decrypted_dir);
+    } else if (choice == '2') {
+        snprintf(decrypted_dir, sizeof(decrypted_dir), "%s_dec", (param)->pwd);
+        sprintf(buffer, "\nMendekripsi direktori: %s\n", (param)->pwd);
+		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+		memset(buffer, 0, strlen(buffer));
+		Sleep(11);
+        if (decrypt_folder((param)->pwd, decrypted_dir, password) == 0) {
+            sprintf(buffer, "Direktori berhasil didekripsi ke: %s\n", decrypted_dir);
+			send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+			memset(buffer, 0, strlen(buffer));
+			Sleep(11);
         } else {
-            printf("Dekripsi direktori gagal\n");
+            strcpy(buffer, "Dekripsi direktori gagal\n");
+			send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+			memset(buffer, 0, strlen(buffer));
+			Sleep(11);
+
         }
-    } else {
-        printf("Pilihan tidak valid\n");
     }
-    printf("Tekan Enter untuk melanjutkan...");
-    getchar();
+} 
+    else {
+        strcpy(buffer, "Pilihan tidak valid");
+		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+		memset(buffer, 0, strlen(buffer));
+		Sleep(11);
+    }
+    strcpy(buffer, "Tekan Enter untuk melanjutkan...");
+	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(11);
+
 }
 
 DWORD WINAPI surfMode(LPVOID paramS) {
@@ -117,45 +188,101 @@ DWORD WINAPI surfMode(LPVOID paramS) {
 	(param)->dir = opendir((param)->pwd);
 	if ((param)->dir == NULL) {
 		printf("Tidak dapat membuka direktori.\n");
-		return;
+		return -1;
 	}
-
-	int choice = 1;
 	
 	do {
-		while(strcmp((param)->input, "END") == 0) Sleep(5000);
-		showPWD(param);
-		showMenu((void *)&(param)->paramT);
-
+		strcpy((param)->input, "END");
+		while(strcmp((param)->input, "END") == 0) Sleep(50);
 		
 		// Bersihin newline
 		(param)->input[strcspn((param)->input, "\n")] = 0;
 		
 		switch((param)->input[0]) {
 			case '1':
-				seeCurrentDirectory(dir, (param)->pwd);
+				showMenu(param);
+				break;
+			case '2':
+				seeCurrentDirectory(param);
 				break;
 
-			case '2':
-				showInorderFile((param)->pwd);
+			case '3':
+				showInorderFile(param);
+				break;
+
+			case '4':
+				showPWD(param);
 				break;
 
 			case '5':
-				showPWD((param)->pwd);
+				handleEncryption(param);
 				break;
 
-			case '6':
-				handleEncryption((param)->pwd);
+			case '6':	//GET FILE
+				showInorderFile(param);
+				GETFILE(param);
+				break;
+
+			case '7':	//INJECT FILE
+				showInorderFile(param);
+				break;
+
+			case '8':	//DELETE FILE
+				showInorderFile(param);
 				break;
 
 			default:
 				printf("Pilihan tidak valid!\n");
 		}
-	} while (choice != 0);
+	} while (true);
 
 	if ((param)->dir != NULL) {
-		closedir(dir);
+		closedir((param)->dir);
 	}
 
 	return 0;
+}
+
+
+void GETFILE(void * paramS){
+	paramSurf * param = (paramSurf *) paramS;
+
+	char buffer[512] = {0};
+
+	strcpy(buffer, "\nPILIH FILE YANG AKAN DIAMBIL\n");
+	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(11);
+
+	strcpy((param)->input, "NULL");
+
+	while(strcmp((param)->input, "NULL")==0) Sleep(500);
+
+	strcpy(buffer, (param)->pwd);
+	strcat(buffer, "\\");
+	strcat(buffer, (param)->input);
+
+	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+	Sleep(11);
+
+
+	FILE * fp = fopen(buffer, "r");
+
+	if(fp == NULL){
+		memset(buffer, 0, strlen(buffer));
+		strcpy(buffer, "\nGAGAL MEMBUKA FILE\n");
+		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+		memset(buffer, 0, strlen(buffer));
+		
+		return;
+	}else{
+		memset(buffer, 0, strlen(buffer));
+		fgets(buffer, sizeof(buffer), fp);
+		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+		memset(buffer, 0, strlen(buffer));
+	}
+
+	while()
+
+	fclose(fp);
 }

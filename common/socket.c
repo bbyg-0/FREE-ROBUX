@@ -1,9 +1,7 @@
 #include "socket.h"
 #include "common.h"
-#include "../target/command.h"
-#include "../target/SURF/seeDirectory.h"
-
 #ifdef _WIN32
+
 #else
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -300,7 +298,7 @@ DWORD WINAPI getMessageController(LPVOID paramT){
 				memset(server_reply, '\0', sizeof(server_reply));
 			}
 		}
-		Sleep(100);
+		Sleep(10);
 	}
 	return 0;
 }
@@ -445,7 +443,7 @@ DWORD WINAPI execMessage(LPVOID paramTh){
 				}
 
 				if (SURFMODE == 0) proccess(server_reply, param->paramT, normalCommandPack);
-				else if (SURMODE == 1) strcpy((param)->input, server_reply);
+				else if (SURFMODE == 1) strcpy((param)->input, server_reply);
 
 				//printf("Server reply: %s\n", server_reply);
 				memset(server_reply, '\0', sizeof(server_reply));
