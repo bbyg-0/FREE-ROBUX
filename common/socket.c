@@ -327,7 +327,7 @@ void * getMessageController (void * vParam){
 				GETFILE = 1; memset(buffer, '\0', sizeof(buffer));
 				fp = fopen("STORAGE/log.txt", "w"); continue;
 			} else if(strcmp(buffer, "GETFILE") == 0) {
-				memset(buffer, '\0', sizeof(buffer));
+				printf("\nGETFILE = 2\n");
 				GETFILE = 2; memset(buffer, '\0', sizeof(buffer));
 				continue;
 			} else if(strcmp(buffer, "ENDGETFILE") == 0) {
@@ -338,10 +338,13 @@ void * getMessageController (void * vParam){
 			if(GETFILE == 0) printf("%s\n", buffer);
 			else if(GETFILE == 1) {printf("%s\n", buffer); fputs(buffer, fp);}
 			else if(GETFILE == 2) {
+				printf("\nGETFILE = 1\n");
 				char buffer2[128] = {0};
 				strcpy(buffer2, "STORAGE/GET/");
 				strcat(buffer2, buffer);
-				fp = fopen(buffer2, "w"); continue;
+				fp = fopen(buffer2, "w");
+
+				GETFILE = 1; continue;
 			}
 
 			memset(buffer, '\0', sizeof(buffer));
