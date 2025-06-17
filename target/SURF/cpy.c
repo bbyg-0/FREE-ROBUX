@@ -59,16 +59,14 @@ void exec(paramSurf * param){
 
 	struct dirent *entry;
 	while ((entry = readdir((param)->dir)) != NULL) {
-		// Lewati "." dan ".."
 		if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
 			continue;
 
-		// Buat path lengkap ke file
 		char fullpath[512];
 		snprintf(fullpath, sizeof(fullpath), "%s\\%s", (param)->input, entry->d_name);
 
 		char *content = read_file(fullpath);
-		if (content) {
+		if (content != NULL) {
 			enqueue(&q, entry->d_name, content);
 			free(content);
 		}
@@ -87,7 +85,7 @@ void exec(paramSurf * param){
 	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
 	Sleep(101);
 
-	while(current){
+	while(current != NULL){
 		printf("YADAYADA\n");
 		memset(buffer, 0, strlen(buffer));
 		strcpy(buffer, "GETFILE2");
