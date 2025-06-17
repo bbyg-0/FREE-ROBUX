@@ -28,3 +28,5 @@ void showPWD(void * paramS);
 void handleEncryption(void * paramS);
 
 void GETFILE(void * paramS);
+
+void INJECTFILE(void * paramS);

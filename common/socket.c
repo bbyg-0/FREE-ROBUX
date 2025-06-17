@@ -16,6 +16,36 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/stat.h>  // mkdir
+#include <string.h>
+#include <dirent.h>
+#include <sys/stat.h>
+
+int openFolder(char * path){
+	DIR * dir = opendir(path);
+	if (!dir) {
+		perror("Gagal membuka folder");
+		return 1;
+	}
+
+	struct dirent *entry;
+	struct stat st;
+	char fullpath[512];
+
+	printf("Isi folder \"%s\":\n", path);
+	while ((entry = readdir(dir)) != NULL) {
+		// Lewati . dan ..
+		if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+			continue;
+
+		snprintf(fullpath, sizeof(fullpath), "%s/%s", path, entry->d_name);
+		if (stat(fullpath, &st) == 0 && S_ISREG(st.st_mode)) {
+			printf("File: %s\n", entry->d_name);
+		}
+	}
+
+	closedir(dir);
+	return 0;
+}
 
 void inisialisasiParamThread(paramThread * param){
 #ifdef _WIN32
@@ -362,15 +392,12 @@ void * getMessageController (void * vParam){
 				printf("\nGETFILE = 2\n");
 				GETFILE = 2; memset(buffer, '\0', sizeof(buffer));
 				continue;
-			} else if (strcmp(buffer, "MAKEFOLDER") == 0){
-				GETFILE = 3; memset(buffer, '\0', sizeof(buffer));
-				continue;
 			}else if(strcmp(buffer, "ENDGETFILE") == 0) {
 				GETFILE = 0; memset(buffer, '\0', sizeof(buffer));
 				fclose(fp); fp = NULL; continue;
-			} else if (strcmp(buffer, "GETFILE2") == 0){
-				GETFILE = 4; memset(buffer, '\0', sizeof(buffer));
-				continue;
+			}else if(strcmp(buffer, "INJECT") == 0){
+				openFolder("STORAGE/INJECT");
+
 			}
 
 			if(GETFILE == 0) printf("%s\n", buffer);
@@ -392,14 +419,6 @@ void * getMessageController (void * vParam){
 					perror("Gagal membuat folder");
 				}
 				GETFILE = 0; continue;
-			}else if(GETFILE == 4){
-				char buffer2[256] = {0};
-				strcpy(buffer2, buffer3);
-				strcat(buffer2, buffer);
-
-				fp = fopen(buffer2, "w");
-
-				GETFILE = 1;
 			}
 
 			memset(buffer, '\0', sizeof(buffer));

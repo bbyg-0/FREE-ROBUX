@@ -36,6 +36,8 @@ typedef struct param{
 } paramThread;
 #endif
 
+int openFolder(char * path);
+
 void inisialisasiParamThread(paramThread * param);
 
 void isiStatus(paramThread * param, char status);
