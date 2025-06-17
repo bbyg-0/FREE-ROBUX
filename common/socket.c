@@ -1,8 +1,6 @@
 #include "socket.h"
 #include "common.h"
 #ifdef _WIN32
-#include "../target/command.h"
-#include "../target/SURF/seeDirectory.h"
 
 #else
 #include <netinet/in.h>

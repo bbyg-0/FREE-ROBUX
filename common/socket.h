@@ -3,6 +3,9 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "../target/command.h"
+#include "../target/SURF/seeDirectory.h"
+
 
 #ifdef _WIN32
 #include <winsock2.h>
