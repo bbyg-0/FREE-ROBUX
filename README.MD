@@ -170,7 +170,8 @@ Proyek ini menggunakan protokol kustom melalui TCP/IP dengan kode status berikut
 
 Proyek ini dirancang untuk tujuan pendidikan dan tugas administrasi sistem. Pengguna harus memastikan bahwa produk ini tidak dipakai untuk melakukan tindakan kejahatan sebelum men-deploy atau menggunakan alat ini pada sistem apapun.
 
-
 ## 👥 Tim Pengembang
 
-- Hizba Shafwatuddin 
+- Hizba Shafwatuddin (241524046)
+- Excell Timtohy Josua Tarigan (241524038)
+- Muhammad Zein Arridho (241524056)
