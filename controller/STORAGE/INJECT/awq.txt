@@ -1,0 +1,1 @@
+gcc -Wall -o surf.exe main.c seeDirectory.c showAllFile.c copyFile.c ../encryption/fileEncryption.c -I ../encryption -I /mingw32/include -L /mingw32/lib -largon2 -lssl -lcrypto
