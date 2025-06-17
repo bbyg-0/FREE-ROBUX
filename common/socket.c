@@ -358,7 +358,7 @@ void * getMessageController (void * vParam){
 		}
 		}else printf("CONNECTING\n");
 
-		usleep(1000000);
+		usleep(10000);
 	}
 	return NULL;
 }
