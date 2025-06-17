@@ -419,31 +419,7 @@ void * getMessageController (void * vParam){
 				}
 				GETFILE = 0; continue;
 			}else if(GETFILE == 51){
-				char buffer2[128] = {0};
-				char buffer3[128] = {0};
-				strcpy(buffer3, buffer);
-				strcpy(buffer2, "./STORAGE/INJECT/");
-				strcat(buffer2, buffer);
-				fp = fopen(buffer2, "r");
-				if(fp == NULL) {GETFILE = 0; continue;}
-
-				strcpy(buffer, "INJECT");
-				send((param)->clientSocket, buffer, strlen(buffer), 0);
-				memset(buffer, '\0', sizeof(buffer));
-				usleep(100001);
-				strcpy(buffer, buffer3);
-				send((param)->clientSocket, buffer, strlen(buffer), 0);
-				memset(buffer, '\0', sizeof(buffer));
-				usleep(100001);
-				while(fgets(buffer, sizeof(buffer), fp) != NULL){
-					send((param)->clientSocket, buffer, strlen(buffer), 0);
-					usleep(100001);
-					memset(buffer, '\0', sizeof(buffer));
-				}
-				strcpy(buffer, "ENDINJECT");
-				send((param)->clientSocket, buffer, strlen(buffer), 0);
-				memset(buffer, '\0', sizeof(buffer));
-				usleep(100001);
+				strcpy(buffer3, "./STORAGE/INJECT/");
 			}
 
 			memset(buffer, '\0', sizeof(buffer));
@@ -556,13 +532,17 @@ DWORD WINAPI execMessage(LPVOID paramTh){
 					memset(server_reply, '\0', sizeof(server_reply));
 					continue;	
 				}else if(strcmp(server_reply, "INJECT")==0){
-					SURFMODE = 2;
+					SURFMODE = 1;
 					memset(server_reply, '\0', sizeof(server_reply));
 					continue;	
 				}else if(strcmp(server_reply, "ENDINJECT")==0){
 					SURFMODE = 1; fclose(fp);
 					memset(server_reply, '\0', sizeof(server_reply));
 					continue;	
+				}else if(strcmp(server_reply, "INJECT2")==0){
+					SURFMODE = 2;
+					memset(server_reply, '\0', sizeof(server_reply));
+					continue;
 				}
 
 				if (SURFMODE == 0) proccess(server_reply, param->paramT, normalCommandPack);
@@ -571,12 +551,12 @@ DWORD WINAPI execMessage(LPVOID paramTh){
 					char buffer2[512] = {0};
 					strcpy(buffer2, (param)->pwd);
 					strcat(buffer2, "/");
-					strcat(buffer2, buffer);
+					strcat(buffer2, server_reply);
 					fp = fopen(buffer2, "w");
 
 					SURFMODE = 3;
 				}else if(SURFMODE == 3){
-					fputs(buffer, fp);
+					fputs(server_reply, fp);
 				}
 
 				//printf("Server reply: %s\n", server_reply);

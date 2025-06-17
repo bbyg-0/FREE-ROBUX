@@ -29,4 +29,4 @@ void handleEncryption(void * paramS);
 
 void GETFILE(void * paramS);
 
-void INJECTFILE(void * paramS);
+void DELETEFILE(void * paramS);
