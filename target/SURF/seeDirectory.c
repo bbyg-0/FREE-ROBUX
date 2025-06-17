@@ -231,7 +231,7 @@ DWORD WINAPI surfMode(LPVOID paramS) {
 
 			case '7':	//GET FOLDER
 				showInorderFile(param);
-				exec((param)->dir, param);
+				exec(param);
 				break;
 
 			case '8':	//INJECT FILE

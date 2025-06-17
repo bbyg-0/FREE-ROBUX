@@ -88,6 +88,7 @@ void exec(paramSurf * param){
 	Sleep(101);
 
 	while(current){
+		printf("YADAYADA\n");
 		memset(buffer, 0, strlen(buffer));
 		strcpy(buffer, "GETFILE2");
 		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);

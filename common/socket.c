@@ -292,11 +292,11 @@ int mkdir_recursive(const char *path) {
     for (p = tmp + 1; *p; p++) {
         if (*p == '/' || *p == '\\') {
             *p = '\0';
-            mkdir(tmp, 0777); // abaikan error jika folder sudah ada
+            mkdir(tmp); // abaikan error jika folder sudah ada
             *p = '/';
         }
     }
-    return mkdir(tmp, 0777);
+    return mkdir(tmp);
 }
 
 
