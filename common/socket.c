@@ -396,8 +396,7 @@ void * getMessageController (void * vParam){
 				GETFILE = 0; memset(buffer, '\0', sizeof(buffer));
 				fclose(fp); fp = NULL; continue;
 			}else if(strcmp(buffer, "INJECT") == 0){
-				openFolder("STORAGE/INJECT");
-
+				openFolder(".");
 			}
 
 			if(GETFILE == 0) printf("%s\n", buffer);

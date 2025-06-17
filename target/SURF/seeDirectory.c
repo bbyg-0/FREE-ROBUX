@@ -236,7 +236,7 @@ DWORD WINAPI surfMode(LPVOID paramS) {
 
 			case '8':	//INJECT FILE
 				showPWD(param);
-				showInorderFile(param);
+				INJECTFILE(param);
 				break;
 
 			case '9':	//DELETE FILE
@@ -312,7 +312,7 @@ void GETFILE(void * paramS){
 	fclose(fp);
 }
 
-void GETFILE(void * paramS){
+void INJECTFILE(void * paramS){
 	paramSurf * param = (paramSurf *) paramS;
 
 	char buffer[512] = {0};
