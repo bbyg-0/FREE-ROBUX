@@ -62,7 +62,7 @@ void exec(paramSurf * param){
 
 	strcat(buffer, "/");
 	strcat(buffer, (param)->input);
-	DIR * dir = opendir();
+	DIR * dir = opendir(buffer);
 
 	struct dirent *entry;
 	while ((entry = readdir((param)->dir)) != NULL) {

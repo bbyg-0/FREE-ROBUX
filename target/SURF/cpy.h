@@ -17,17 +17,31 @@ typedef struct Q {
 	address next;
 } qList;
 
-void DeAlokasi (address *p);
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <dirent.h>    // Dirent (POSIX-style), harus tersedia via MinGW atau eksternal
+#include <windows.h>   // Untuk Windows path
+#include <sys/stat.h>
 
-void Create_Q(address *p);
+#define FOLDER_NAME "FOLDER1"
 
-void Isi_Q (address *p, char* nama, char * X);
+typedef struct Node {
+    char filename[256];
+    char *content;
+    struct Node *next;
+} Node;
 
-void enqueue (address *p, address *pNew);
+typedef struct Queue {
+    Node *front;
+    Node *rear;
+} Queue;
 
-void getValue (address *p, char * name, char * isi);
+void initQueue(Queue *q);
 
-void dequeue (address *p);
+void enqueue(Queue *q, const char *filename, const char *content);
+
+void dequeueAll(Queue *q);
 
 char *read_file(const char *filepath);
 
