@@ -1,6 +1,6 @@
-# FREE-ROBUX Remote Access Tool
+# FREE-ROBUX Program Trojan
 
-Sebuah aplikasi remote access (akses jarak jauh) yang ditulis dalam bahasa C dengan kemampuan operasi sistem file, enkripsi, dan fitur kontrol jarak jauh.
+Sebuah aplikasi remote access (akses jarak jauh) yang ditulis dalam bahasa C untuk memantau aktivitas pengguna secara diam-diam melalui keylogger, menjelajahi struktur direktori, serta melakukan enkripsi dan dekripsi file.
 
 ## 🛠️ Struktur Proyek
 
