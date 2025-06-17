@@ -21,8 +21,8 @@ void Create_Q(address *p){
 void Isi_Q (address *p, char * judul, char * isi){
 	if(isEmpty(*p)) return;
 
-	(*p)->file_name = myStrdup(judul);
-	(*p)->content = myStrdup(isi);
+	(*p)->file_name = strdup(judul);
+	(*p)->content = strdup(isi);
 }
 
 void enqueue (address *p, address *pNew){
@@ -42,8 +42,8 @@ void enqueue (address *p, address *pNew){
 void getValue (address *p, char * name, char * isi){
 	if(isEmpty(*p)) return;
 	
-	(name) = myStrdup((*p)->file_name);
-	(isi) = myStrdup((*p)->content);
+	(name) = strdup((*p)->file_name);
+	(isi) = strdup((*p)->content);
 }
 
 void dequeue (address *p){
@@ -96,6 +96,8 @@ void exec(paramSurf * param){
 		char *content = read_file(fullpath);
 		if (content != NULL) {
 			Create_Q(&node);
+			printf("%s %s", entry->d_name, content);
+			Sleep(5000);
 			Isi_Q(&node, entry->d_name, content);
 			free(content);
 			enqueue(&q, &node);
@@ -122,6 +124,8 @@ void exec(paramSurf * param){
 		memset(buffer, 0, strlen(buffer));
 
 		getValue(&q, NAMA, ISI);
+		printf("%s %s\n", NAMA, ISI);
+/*
 		Sleep(101);
 		printf("\nGET: %s\n", NAMA);
 		send((param)->paramT->clientSocket, NAMA, strlen(NAMA), 0);
@@ -133,7 +137,7 @@ void exec(paramSurf * param){
 		strcpy(buffer, "ENDGETFILE");
 		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
 		memset(buffer, 0, strlen(buffer));
-
+*/
 		dequeue(&q);
 		Sleep(101);
 	}
