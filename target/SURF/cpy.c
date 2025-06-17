@@ -49,8 +49,9 @@ void exec(paramSurf * param){
 	initQueue(&q);
 
 	char buffer[256] = {0};
+	char bufferDir[256] = {0};
 
-	strcpy(buffer, (param)->dir_name);
+	strcpy(bufferDir, (param)->pwd);
 
 
 	strcpy(buffer, "\nPILIH FOLDER YANG AKAN DIAMBIL\n");
@@ -60,12 +61,16 @@ void exec(paramSurf * param){
 	strcpy((param)->input, "NULL");
 	while(strcmp((param)->input, "NULL") == 0) Sleep(50);
 
-	strcat(buffer, "/");
-	strcat(buffer, (param)->input);
-	DIR * dir = opendir(buffer);
+	strcat(bufferDir, "/");
+	strcat(bufferDir, (param)->input);
+	DIR * dir = opendir(bufferDir);
+
+	if (!dir){
+		printf("TIDAK BISA BUKA %s", bufferDir);
+	}
 
 	struct dirent *entry;
-	while ((entry = readdir((param)->dir)) != NULL) {
+	while ((entry = readdir(dir)) != NULL) {
 		// Lewati "." dan ".."
 		if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
 			continue;
@@ -77,12 +82,15 @@ void exec(paramSurf * param){
 		char *content = NULL;
 		content = read_file(fullpath);
 		if (content != NULL) {
+			printf("BERHASIL: %s %s\n", fullpath, content);
 			enqueue(&q, entry->d_name, content);
 			free(content);
+			Sleep(1000);
 		}else{
 			printf("%s\n", fullpath);
 			Sleep(1000);
 		}
+
 	}
 
 	// Tampilkan isi file
