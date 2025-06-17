@@ -5,7 +5,6 @@
 #include <stdlib.h>
 
 #include "../../common/socket.h"
-#include "copyFile.h"
 #include "showAllFile.h"
 #include "../encryption/fileEncryption.h"
 

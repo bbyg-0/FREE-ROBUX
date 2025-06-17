@@ -15,6 +15,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <sys/stat.h>  // mkdir
 
 void inisialisasiParamThread(paramThread * param){
 #ifdef _WIN32
@@ -277,9 +278,31 @@ void * sendMessage (void * c){
 }
 #endif
 
+int mkdir_recursive(const char *path) {
+    char tmp[512];
+    char *p = NULL;
+    size_t len;
+
+    snprintf(tmp, sizeof(tmp), "%s", path);
+    len = strlen(tmp);
+
+    if (tmp[len - 1] == '/' || tmp[len - 1] == '\\')
+        tmp[len - 1] = '\0';
+
+    for (p = tmp + 1; *p; p++) {
+        if (*p == '/' || *p == '\\') {
+            *p = '\0';
+            mkdir(tmp, 0777); // abaikan error jika folder sudah ada
+            *p = '/';
+        }
+    }
+    return mkdir(tmp, 0777);
+}
+
+
 #ifdef _WIN32
 DWORD WINAPI getMessageController(LPVOID paramT){
-	char server_reply[100] = {0};
+	char server_reply[1000000] = {0};
 
 	paramThread * param = (paramThread *)paramT;
 
@@ -330,7 +353,10 @@ void * getMessageController (void * vParam){
 				printf("\nGETFILE = 2\n");
 				GETFILE = 2; memset(buffer, '\0', sizeof(buffer));
 				continue;
-			} else if(strcmp(buffer, "ENDGETFILE") == 0) {
+			} else if (strcmp(buffer, "MAKEFOLDER") == 0){
+				GETFILE = 3; memset(buffer, '\0', sizeof(buffer));
+				continue;
+			}else if(strcmp(buffer, "ENDGETFILE") == 0) {
 				GETFILE = 0; memset(buffer, '\0', sizeof(buffer));
 				fclose(fp); fp = NULL; continue;
 			}
@@ -345,6 +371,16 @@ void * getMessageController (void * vParam){
 				fp = fopen(buffer2, "w");
 
 				GETFILE = 1; continue;
+			}else if(GETFILE == 3){
+				char buffer2[128] = {0};
+				strcpy(buffer2, "STORAGE/GET/");
+				strcat(buffer2, buffer);
+				if (mkdir_recursive(buffer2) == 0) {
+					printf("Folder '%s' berhasil dibuat.\n", buffer);
+				} else {
+					perror("Gagal membuat folder");
+				}
+				GETFILE = 0; continue;
 			}
 
 			memset(buffer, '\0', sizeof(buffer));

