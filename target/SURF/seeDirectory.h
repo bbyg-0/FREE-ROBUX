@@ -4,9 +4,9 @@
 #include <dirent.h>
 #include <stdlib.h>
 
+#include "../../common/socket.h"
 #include "copyFile.h"
 #include "showAllFile.h"
-#include "../../common/socket.h"
 #include "../encryption/fileEncryption.h"
 
 typedef struct paramSurff{

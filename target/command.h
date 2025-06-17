@@ -1,4 +1,5 @@
 #pragma once
+#include "../common/socket.h"
 
 typedef void (*pointPro)(void * param);
 

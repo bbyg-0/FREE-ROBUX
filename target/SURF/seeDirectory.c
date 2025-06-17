@@ -277,12 +277,23 @@ void GETFILE(void * paramS){
 		return;
 	}else{
 		memset(buffer, 0, strlen(buffer));
-		fgets(buffer, sizeof(buffer), fp);
+		strcpy(buffer, "GETFILE");
+		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+		memset(buffer, 0, strlen(buffer));
+
+		send((param)->paramT->clientSocket, (param)->input, strlen((param)->input), 0);
+
+		Sleep(101);
+		while (fgets(buffer, sizeof(buffer), fp) != NULL) {
+			send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
+			memset(buffer, 0, strlen(buffer));
+			Sleep(101);
+		}
+		
+		strcpy(buffer, "ENDGETFILE");
 		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
 		memset(buffer, 0, strlen(buffer));
 	}
-
-	while()
 
 	fclose(fp);
 }

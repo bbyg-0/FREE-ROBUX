@@ -7,7 +7,6 @@
 
 
 #ifdef _WIN32
-#include "../target/SURF/seeDirectory.h"
 #include <winsock2.h>
 #include <stdio.h>
 
@@ -21,6 +20,8 @@ typedef struct parameterThread{
 	char * litAddress;
 	char socketStatus;
 } paramThread;
+#include "../target/SURF/seeDirectory.h"
+
 #else
 #include <netinet/in.h>
 #include <sys/socket.h>

