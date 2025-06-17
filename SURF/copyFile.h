@@ -6,7 +6,6 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include <direct.h>
 #include <errno.h>
 
 #include "showAllFile.h" // Buat ambil MAX_PATH

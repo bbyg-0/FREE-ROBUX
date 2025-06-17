@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
-#include <windows.h>
 #include <stdlib.h>
 
 #ifdef _WIN32
+#include <windows.h>
     #include <direct.h>
 #else
     #include <unistd.h>

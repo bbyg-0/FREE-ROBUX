@@ -25,4 +25,4 @@ typedef struct paramSurff{
 void showMenu();
 DWORD WINAPI surfMode(LPVOID param);
 void showPWD(void * paramS);
-void handleEncryption(const char *pwd);
+//void handleEncryption(const char *pwd);
