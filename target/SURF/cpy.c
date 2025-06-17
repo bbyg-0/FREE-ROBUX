@@ -89,7 +89,7 @@ void exec(paramSurf * param){
 
 	while(current){
 		memset(buffer, 0, strlen(buffer));
-		strcpy(buffer, "GETFILE");
+		strcpy(buffer, "GETFILE2");
 		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
 		memset(buffer, 0, strlen(buffer));
 

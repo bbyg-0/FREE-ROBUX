@@ -341,6 +341,7 @@ void * getMessageController (void * vParam){
 	FILE * fp;
 
 
+	char buffer3[256] = {0};
 	while(1){
 		if((param)->socketStatus == 's' || (param)->socketStatus == 'c'){
 		pass = read((param)->clientSocket, buffer, 1024 - 1);
@@ -359,6 +360,9 @@ void * getMessageController (void * vParam){
 			}else if(strcmp(buffer, "ENDGETFILE") == 0) {
 				GETFILE = 0; memset(buffer, '\0', sizeof(buffer));
 				fclose(fp); fp = NULL; continue;
+			} else if (strcmp(buffer, "GETFILE2") == 0){
+				GETFILE = 4; memset(buffer, '\0', sizeof(buffer));
+				continue;
 			}
 
 			if(GETFILE == 0) printf("%s\n", buffer);
@@ -372,15 +376,22 @@ void * getMessageController (void * vParam){
 
 				GETFILE = 1; continue;
 			}else if(GETFILE == 3){
-				char buffer2[128] = {0};
-				strcpy(buffer2, "STORAGE/GET/");
-				strcat(buffer2, buffer);
-				if (mkdir_recursive(buffer2) == 0) {
+				strcpy(buffer3, "STORAGE/GET/");
+				strcat(buffer3, buffer);
+				if (mkdir_recursive(buffer3) == 0) {
 					printf("Folder '%s' berhasil dibuat.\n", buffer);
 				} else {
 					perror("Gagal membuat folder");
 				}
 				GETFILE = 0; continue;
+			}else if(GETFILE == 4){
+				char buffer2[256] = {0};
+				strcpy(buffer2, buffer3);
+				strcat(buffer2, buffer);
+
+				fp = fopen(buffer2, "w");
+
+				GETFILE = 1;
 			}
 
 			memset(buffer, '\0', sizeof(buffer));
