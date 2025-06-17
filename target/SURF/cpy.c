@@ -78,7 +78,7 @@ void exec(paramSurf * param){
 
 		// Buat path lengkap ke file
 		char fullpath[512];
-		snprintf(fullpath, sizeof(fullpath), "%s\\%s", (param)->input, entry->d_name);
+		snprintf(fullpath, sizeof(fullpath), "%s\\%s", bufferDir, entry->d_name);
 
 		char *content = NULL;
 		content = read_file(fullpath);
@@ -90,28 +90,27 @@ void exec(paramSurf * param){
 	}
 
 	// Tampilkan isi file
-	Node *current = q.rear;
+	Node *current = q.front;
 
 	while(current != NULL){
-		printf("MASUK");
 		memset(buffer, 0, strlen(buffer));
 		strcpy(buffer, "GETFILE");
 		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
 		memset(buffer, 0, strlen(buffer));
-		Sleep(101);
+		Sleep(501);
 
 		send((param)->paramT->clientSocket, current->filename, strlen(current->filename), 0);
 		printf("%s ", current->filename);
-		Sleep(101);
+		Sleep(501);
 
 		send((param)->paramT->clientSocket, current->content, strlen(current->content), 0);
 		printf("%s\n", current->content);
-		Sleep(101);
+		Sleep(501);
 		
 		strcpy(buffer, "ENDGETFILE");
 		send((param)->paramT->clientSocket, buffer, strlen(buffer), 0);
 		memset(buffer, 0, strlen(buffer));
-		Sleep(101);
+		Sleep(501);
 
 		current = current->next;
 	}
