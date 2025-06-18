@@ -194,7 +194,7 @@ void seeCurrentDirectory(void * paramS) {
 	rewinddir((param)->dir);
 
 	while ((entry = readdir((param)->dir)) != NULL) {
-		sprintf(buffer, "%s\n", entry->d_name);
+		sprintf(buffer, "%s", entry->d_name);
         send(((param)->paramT)->clientSocket, buffer, strlen(buffer), 0);
         memset(buffer, 0, strlen(buffer));
         Sleep(101);

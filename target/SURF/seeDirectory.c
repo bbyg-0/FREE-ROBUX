@@ -9,57 +9,52 @@ void showMenu(void * paramT) {
 
 	char buffer[128] = {0};
 
-	strcpy(buffer, "\nPilihan Menu:\n");
+	strcpy(buffer, "\nPilihan Menu:");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
 	Sleep(11);
 
-	strcpy(buffer, "1. Tampilkan menu\n");
+	strcpy(buffer, "1. Tampilkan menu");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
 	Sleep(11);
 
-	strcpy(buffer, "2. Lihat isi direktori saat ini\n");
+	strcpy(buffer, "2. Lihat isi direktori saat ini");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
 	Sleep(11);
 
-	strcpy(buffer, "3. Tampilkan struktur direktori\n");
+	strcpy(buffer, "3. Tampilkan struktur direktori");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
 	Sleep(11);
 
-	strcpy(buffer, "4. Lihat pwd saat ini\n");
+	strcpy(buffer, "4. Lihat pwd saat ini");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
 	Sleep(11);
 
-	strcpy(buffer, "5. Enkripsi/Dekripsi file\n");
+	strcpy(buffer, "5. Enkripsi/Dekripsi file");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
 	Sleep(11);
 
-	strcpy(buffer, "6. GET FILE\n");
+	strcpy(buffer, "6. GET FILE");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
 	Sleep(11);
 
-	strcpy(buffer, "7. GET FOLDER\n");
+	strcpy(buffer, "7. GET FOLDER");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
 	Sleep(11);
 
-	strcpy(buffer, "8. INJECT FILE\n");
+	strcpy(buffer, "8. DELETE FILE");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
 	Sleep(11);
 
-	strcpy(buffer, "9. DELETE FILE\n");
-	send((param)->clientSocket, buffer, strlen(buffer), 0);
-	memset(buffer, 0, strlen(buffer));
-	Sleep(11);
-
-	strcpy(buffer, "Input \"END\" untuk keluar dari SURF MODE\n");
+	strcpy(buffer, "Input \"END\" untuk keluar dari SURF MODE");
 	send((param)->clientSocket, buffer, strlen(buffer), 0);
 	memset(buffer, 0, strlen(buffer));
 	Sleep(11);

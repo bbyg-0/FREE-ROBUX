@@ -25,3 +25,5 @@ void EXIT(void * paramT);
 void HALLO(void * paramT);
 
 void GETKEYLOG(void * paramT);
+
+void HELP(void * paramT);

