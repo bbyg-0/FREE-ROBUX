@@ -74,24 +74,6 @@ mingw-w64-x86_64-make      # Otomatisasi build
 mingw-w64-x86_64-gdb       # Debugger
 ```
 
-## 📋 Membangun Proyek
-
-1. Instal MSYS2 dan dependensi yang diperlukan:
-
-```bash
-pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-openssl mingw-w64-x86_64-libsodium mingw-w64-x86_64-argon2
-```
-
-2. Bangun proyek menggunakan skrip build yang disediakan:
-
-```bash
-# Untuk build biasa
-./build.sh
-
-# Untuk build debug dengan flag tambahan
-./build2.sh
-```
-
 ## 🌟 Komponen
 
 ### Modul Common
@@ -129,14 +111,21 @@ pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-openssl mingw-w64-x86_64-libsodi
 
 ```bash
 cd controller
-../build.sh
+./build.sh
 ```
 
-2. Build target:
+2. Build controller:
+
+```bash
+cd controller
+build.bat
+```
+
+3. Build target:
 
 ```bash
 cd target
-../build.sh
+./build.sh "IP ADDRESS"
 ```
 
 3. Jalankan controller pada mesin pengontrol:
@@ -146,10 +135,7 @@ cd target
 ```
 
 4. Deploy dan jalankan target pada mesin remote:
-
-```bash
-./target.exe
-```
+User target device mengeksekusi file sebagai administrator
 
 ## 🌐 Protokol Jaringan
 
