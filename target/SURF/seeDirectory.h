@@ -8,14 +8,6 @@
 #include "showAllFile.h"
 #include "../encryption/fileEncryption.h"
 
-typedef struct paramSurff{
-	paramThread * paramT;
-	DIR * dir;
-	char pwd[2048];
-	char input[MAX_PATH];
-	char dir_name[MAX_PATH];
-} paramSurf;
-
 #ifdef _WIN32
     #include <direct.h>
 #else

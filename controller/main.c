@@ -8,6 +8,7 @@
 #endif
 
 #include "../common/socket.h"
+#include "../target/command.h"
 
 #define PORT 8080
 int main(int argc, char const* argv[]){

