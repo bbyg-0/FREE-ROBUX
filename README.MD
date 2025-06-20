@@ -9,22 +9,24 @@ FREE-ROBUX/
 ├── common/             # Fungsi umum dan operasi jaringan
 │   ├── common.c/h      # Fungsi utilitas umum
 │   └── socket.c/h      # Implementasi socket jaringan
-├── encryption/         # Modul enkripsi
-│   ├── encrypt_main.c
-│   ├── fileEncryption.c/h
-│   └── input.txt
-├── SURF/               # Modul Operasi Sistem File
-│   ├── copyFile.c/h    # Fungsionalitas penyalinan file
+├── controller/             
 │   ├── main.c
-│   ├── seeDirectory.c/h
-│   └── showAllFile.c/h
+│   ├── build.sh
+│   ├── build.bat
+│   └── STORAGE/
+│       └── GET/
+│       └── INJECT/
 └── target/             # Komponen target
     ├── SURF/
-    │   ├── copyFile.c/h
+    │   ├── cpy.c/h
     │   ├── seeDirectory.c/h
     │   └── showAllFile.c/h
+    ├── encryption/         # Modul enkripsi
+    │   ├── fileEncryption.c/h
+    │   └── input.txt
     ├── command.c/h     # Pemrosesan perintah
     ├── keylogger.c/h   # Fungsionalitas keylogger
+    ├── build.sh
     └── main.c          # Program utama target
 ```
 
